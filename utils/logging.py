@@ -9,6 +9,7 @@ except Exception, e:
 
 
 class Logger():
+
     def __init__(self):
         """
         Initialize and configure the logger. The logging level and the logger name

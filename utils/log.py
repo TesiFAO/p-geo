@@ -16,7 +16,8 @@ class Logger():
         are set in the general.json file stored in the config folder.
         """
         self.config = c.Config('general')
-        self.level = logging.INFO
+        self.level = 'INFO'
+        print self.config.get('loggingLevel')
         logging.basicConfig(level=self.config.get('loggingLevel'),
                             format='%(asctime)s | %(levelname)-8s | %(message)s',
                             datefmt='%d-%m-%Y | %H:%M:%s')

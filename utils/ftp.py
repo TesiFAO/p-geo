@@ -2,13 +2,13 @@ import os
 import sys
 from ftplib import FTP
 try:
-    from utils import logging
+    from utils import log
 except Exception, e:
     sys.path.append('../')
-    from utils import logging
+    from utils import log
 
 
-class FTP():
+class FTPFENIX():
 
     def __init__(self, ftp, dir):
         """
@@ -16,7 +16,7 @@ class FTP():
         @param ftp: FTP address
         @param dir: Directory where to move after the login
         """
-        self.l - logging.Logger()
+        self.l = log.Logger()
         self.ftp = FTP(ftp)
         self.ftp.login()
         self.ftp.cwd(dir)

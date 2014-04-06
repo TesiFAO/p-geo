@@ -1,10 +1,10 @@
 import os
 import sys
 try:
-    from utils import logging, config
+    from utils import log, config
 except Exception, e:
     sys.path.append('../')
-    from utils import logging, config
+    from utils import log, config
 
 
 class MODIS():

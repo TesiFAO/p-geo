@@ -27,6 +27,10 @@ def create_modis_structure(product, year, day):
         os.makedirs(c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/EVI/')
     if not os.path.exists(c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/EVI/original/'):
         os.makedirs(c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/EVI/original/')
+    if not os.path.exists(c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/EVI/tmp/'):
+        os.makedirs(c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/EVI/tmp/')
+    if not os.path.exists(c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/EVI/output/'):
+        os.makedirs(c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/EVI/output/')
 
 def fix_band_name(name):
     """

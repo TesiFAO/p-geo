@@ -1,10 +1,18 @@
 import Queue
 import threading
 import time
+import sys
+import os
 from gis import raster
-from utils import ftp
+try:
+    from utils import log, config, ftp
+except Exception, e:
+    sys.path.append('../')
+    from utils import log, config, ftp
 
 exitFlag = 0
+c = config.Config('MODIS')
+l = log.Logger()
 
 class MODIS(threading.Thread):
 
@@ -15,9 +23,9 @@ class MODIS(threading.Thread):
         self.q = q
 
     def run(self):
-        print 'Starting ' + self.name
+        l.info('Starting ' + self.name)
         process_data(self.name, self.q)
-        print 'Exiting ' + self.name
+        l.info('Exiting ' + self.name)
 
 def process_data(threadName, q):
     while not exitFlag:
@@ -26,14 +34,17 @@ def process_data(threadName, q):
             data = q.get()
             raster.modisDownloadExtractDelete('MOD13A2', '2014', '001', data)
             queueLock.release()
-            print '%s processing %s' % (threadName, data)
+            l.info(threadName + ' processing ' + data)
         else:
             queueLock.release()
         time.sleep(1)
 
 layers = ftp.listDir('ladsweb.nascom.nasa.gov', '/allData/5/MOD13A2/2014/001/')
 
-threadList = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9']
+threadList = []
+for i in range(0, c.get('threads')):
+    threadList.append('T' + str(i))
+
 nameList = layers
 queueLock = threading.Lock()
 workQueue = Queue.Queue(len(layers))
@@ -63,4 +74,20 @@ exitFlag = 1
 # Wait for all threads to complete
 for t in threads:
     t.join()
-print "Exiting Main Thread"
+l.info('Exiting Main Thread')
+
+l.info('Create global hdf: START...')
+if not os.path.exists('/home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out.hdf'):
+    os.system('gdal_merge.py -n 0 /home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/tmp/*.hdf -o /home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out.hdf')
+l.info('Create global hdf: DONE.')
+
+l.info('Create 4326 TIF: START...')
+if not os.path.exists('/home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out_4326.hdf'):
+    os.system("gdalwarp -multi -of GTiff -tr 0.00833333 -0.00833333  -s_srs '+proj=sinu +R=6371007.181 +nadgrids=@null +wktext' -co 'TILED=YES' -t_srs EPSG:4326 /home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out.hdf /home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out_4326.tif")
+l.info('Create 4326 TIF: DONE.')
+
+l.info('Create overviews: START...')
+if not os.path.exists('/home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out_4326_overviews.hdf'):
+    os.system('cp /home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out_4326.tif /home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out_4326_overviews.tif')
+    os.system('gdaladdo -r average /home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out_4326_overviews.tif 2 4 8 16')
+l.info('Create overviews: DONE.')

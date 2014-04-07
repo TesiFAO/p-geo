@@ -10,7 +10,7 @@ except Exception, e:
 
 class Logger():
 
-    def __init__(self):
+    def __init__(self, loggerName='p-geo'):
         """
         Initialize and configure the logger. The logging level and the logger name
         are set in the general.json file stored in the config folder.
@@ -21,7 +21,7 @@ class Logger():
         logging.basicConfig(level=self.config.get('loggingLevel'),
                             format='%(asctime)s | %(levelname)-8s | %(message)s',
                             datefmt='%d-%m-%Y | %H:%M:%s')
-        self.logger = logging.getLogger(self.config.get('loggerName'))
+        self.logger = logging.getLogger(loggerName)
         self.logger.setLevel(self.level)
 
     def debug(self, msg):

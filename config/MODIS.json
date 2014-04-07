@@ -3,7 +3,7 @@
     "ftp"       :   "ladsweb.nascom.nasa.gov",
     "ftp_dir"   :   "/allData/5/",
     "ip"        :   "127.0.0.1",
-    "targetDir" :   "/Users/simona/Desktop/MODIS",
+    "targetDir" :   "/home/kalimaha/Desktop/MODIS",
     "port"      :   1234,
     "debug"     :   true
 }

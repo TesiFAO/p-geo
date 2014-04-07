@@ -4,6 +4,7 @@ import time
 from gis import raster
 from utils import ftp
 
+exitFlag = 0
 
 class MODIS(threading.Thread):
 
@@ -12,7 +13,6 @@ class MODIS(threading.Thread):
         self.threadID = threadID
         self.name = name
         self.q = q
-        self.gdal = raster.gdal(self.c.get('target_dir'))
 
     def run(self):
         print 'Starting ' + self.name
@@ -24,15 +24,14 @@ def process_data(threadName, q):
         queueLock.acquire()
         if not workQueue.empty():
             data = q.get()
+            raster.modisDownloadExtractDelete('MOD13A2', '2014', '001', data)
             queueLock.release()
             print '%s processing %s' % (threadName, data)
-            gdal = raster.gdal('/Users/simona/Desktop/MODIS');
-            gdal.modisDownloadExtractDelete('MOD13A2', '2014', '001', data)
         else:
             queueLock.release()
         time.sleep(1)
 
-layers = ftp.FTP('ladsweb.nascom.nasa.gov', '/allData/5/MOD13A2/2014/001/').list_dir()
+layers = ftp.listDir('ladsweb.nascom.nasa.gov', '/allData/5/MOD13A2/2014/001/')
 
 threadList = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9']
 nameList = layers

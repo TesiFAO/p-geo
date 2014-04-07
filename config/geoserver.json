@@ -1,0 +1,8 @@
+{
+    "wmsurl"  : "http://localhost:9090/geoserver/wms",
+    "resturl" : "http://localhost:9090/geoserver",
+    "datadir" : "/home/vortex/programs/tomcat_geoservers/data/",
+    "username" : "username",
+    "password" : "password",
+    "debug" : true
+}

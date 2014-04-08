@@ -8,6 +8,7 @@
     "threads"       :   8,
     "debug"         :   true,
     "bands"         : {
+        "NDVI"  :   "0",
         "EVI"   :   "1"
     },
     "subfolders"    : {

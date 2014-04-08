@@ -99,8 +99,8 @@ for band in bands:
 
     # Create 4326 projection
     l.info('Create 4326 TIF for ' + band + ': START...')
+    src = c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/' + band + '/' + subfolders['output'] + '/' + name
     name = product + '.' + year + '.' + day + '.' + band + '.4326.tif'
-    src = c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/' + band + '/' + subfolders['output'] + '/' + name.replace('.4326.hdf', '.hdf')
     out = c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/' + band + '/' + subfolders['output'] + '/' + name
     if not os.path.exists(out):
         os.system("gdalwarp -srcnodata 0 -dstnodata nodata -multi -of GTiff -tr 0.00833333 -0.00833333  -s_srs '+proj=sinu +R=6371007.181 +nadgrids=@null +wktext' -co 'TILED=YES' -t_srs EPSG:4326 " + src + " " + out)

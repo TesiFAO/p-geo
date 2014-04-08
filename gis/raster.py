@@ -48,9 +48,13 @@ def extract_band(target_dir, band):
     return out
 
 def modisDownloadExtractDelete(product, year, day, layer):
+
     filesystem.create_modis_structure(product, year, day)
+    bands = c.get('bands')
+    subfolders = c.get('subfolders')
+
     dir = c.get('ftp_dir') + '/' + product + '/' + year + '/' + day + '/'
-    targetDir = c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/EVI/original/'
+    targetDir = c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/' + subfolders['original'] + '/'
     file = layer
     local_file = os.path.join(targetDir, file)
     if not os.path.exists(local_file):
@@ -69,15 +73,16 @@ def modisDownloadExtractDelete(product, year, day, layer):
         except Exception, e:
             l.error('Error while downloading layer: ' + layer)
             ftp.quit()
+    else:
+        l.info(local_file + ' already exists.')
     gtif = gdal.Open(local_file)
 
-    bands = c.get('bands')
-    subfolders = c.get('subfolders')
     for b in bands:
         band = filesystem.fix_band_name(gtif.GetSubDatasets()[int(bands[b])][0])
-        cmd = 'gdal_translate -q ' + band + ' ' + targetDir.replace('/' + b + '/' + subfolders['original'] + '/', '/' + b + '/' + subfolders['tmp'] + '/') + layer
+        out_file = c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/' + b + '/' + subfolders['tmp'] + '/' + layer
+        cmd = 'gdal_translate -q ' + band + ' ' + out_file
         try:
-            if not os.path.exists(targetDir.replace('/' + b + '/' + subfolders['original'] + '/', '/' + b + '/' + subfolders['tmp'] + '/') + layer):
+            if not os.path.exists(out_file):
                 os.system(cmd)
                 l.info('GDAL Translate: done. [' + layer + ']')
         except Exception, e:

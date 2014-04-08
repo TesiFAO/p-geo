@@ -49,6 +49,3 @@ def fix_band_name(name):
         else:
             out += c
     return out
-
-
-create_modis_structure('MOD13A2', '2013', '001')

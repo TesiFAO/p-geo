@@ -17,7 +17,6 @@ class Logger():
         """
         self.config = c.Config('general')
         self.level = 'INFO'
-        print self.config.get('loggingLevel')
         logging.basicConfig(level=self.config.get('loggingLevel'),
                             format='%(asctime)s | %(levelname)-8s | %(message)s',
                             datefmt='%d-%m-%Y | %H:%M:%s')

@@ -70,11 +70,15 @@ def modisDownloadExtractDelete(product, year, day, layer):
             l.error('Error while downloading layer: ' + layer)
             ftp.quit()
     gtif = gdal.Open(local_file)
-    band = filesystem.fix_band_name(gtif.GetSubDatasets()[1][0])
-    cmd = 'gdal_translate -q ' + band + ' ' + targetDir.replace('/EVI/original/', '/EVI/tmp/') + layer
-    try:
-        if not os.path.exists(targetDir.replace('/EVI/original/', '/EVI/tmp/') + layer):
-            os.system(cmd)
-            l.info('GDAL Translate: done. [' + layer + ']')
-    except Exception, e:
-        l.error('Error during GDAL Translate: ' + e)
+
+    bands = c.get('bands')
+    subfolders = c.get('subfolders')
+    for b in bands:
+        band = filesystem.fix_band_name(gtif.GetSubDatasets()[int(bands[b])][0])
+        cmd = 'gdal_translate -q ' + band + ' ' + targetDir.replace('/' + b + '/' + subfolders['original'] + '/', '/' + b + '/' + subfolders['tmp'] + '/') + layer
+        try:
+            if not os.path.exists(targetDir.replace('/' + b + '/' + subfolders['original'] + '/', '/' + b + '/' + subfolders['tmp'] + '/') + layer):
+                os.system(cmd)
+                l.info('GDAL Translate: done. [' + layer + ']')
+        except Exception, e:
+            l.error('Error during GDAL Translate: ' + e)

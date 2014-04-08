@@ -78,12 +78,12 @@ l.info('Exiting Main Thread')
 
 l.info('Create global hdf: START...')
 if not os.path.exists('/home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out.hdf'):
-    os.system('gdal_merge.py -n 0 /home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/tmp/*.hdf -o /home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out.hdf')
+    os.system('gdal_merge.py -n -3000 -a_nodata 0 /home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/tmp/*.hdf -o /home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out.hdf')
 l.info('Create global hdf: DONE.')
 
 l.info('Create 4326 TIF: START...')
 if not os.path.exists('/home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out_4326.hdf'):
-    os.system("gdalwarp -multi -of GTiff -tr 0.00833333 -0.00833333  -s_srs '+proj=sinu +R=6371007.181 +nadgrids=@null +wktext' -co 'TILED=YES' -t_srs EPSG:4326 /home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out.hdf /home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out_4326.tif")
+    os.system("gdalwarp -srcnodata 0 -dstnodata nodata -multi -of GTiff -tr 0.00833333 -0.00833333  -s_srs '+proj=sinu +R=6371007.181 +nadgrids=@null +wktext' -co 'TILED=YES' -t_srs EPSG:4326 /home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out.hdf /home/kalimaha/Desktop/MODIS/MOD13A2/2014/001/EVI/output/out_4326.tif")
 l.info('Create 4326 TIF: DONE.')
 
 l.info('Create overviews: START...')

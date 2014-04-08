@@ -62,5 +62,3 @@ def create_tmp_file(string_value, prefix='', extension=''):
     text_file.write(string_value)
     text_file.close()
     return filename
-
-print tmp_filename()

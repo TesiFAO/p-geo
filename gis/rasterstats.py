@@ -13,18 +13,18 @@ except Exception, e:
 def get_histogram( input_value_raster, force=False, buckets=256, include_out_of_range=0 ):
 
     ds = gdal.Open( input_value_raster )
+    print input_value_raster
 
     # pass the band selection
     band = 1
 
+    # force the calculation of min max and of the histogram?
     # get min and max values (force the recalculation?)
     min = ds.GetRasterBand(band).GetMinimum()
     max = ds.GetRasterBand(band).GetMaximum()
 
     histogram = ds.GetRasterBand(band).GetHistogram( buckets=buckets, min=min, max=max, include_out_of_range = include_out_of_range )
-
-    # encode the json
-    return json.dumps({ "buckets":buckets,"min":min,"max":max,"values":histogram}, separators=(',',':'))
+    return {"buckets":buckets,"min":min,"max":max,"values":histogram}
 
 def get_raster_statistics(input_raster, force=True):
     src_ds = gdal.Open(input_raster)
@@ -48,9 +48,7 @@ def get_raster_statistics(input_raster, force=True):
 
 def get_zonalstatics_by_json(input_raster, json):
     json_file = filesystem.create_tmp_file(json, 'json_', '.json')
-    print json_file
     shp_file = vector.create_shapefile_from_json(json_file)
-    print shp_file
     shp = ogr.Open(shp_file)
     lyr = shp.GetLayer()
     stats = []
@@ -104,9 +102,9 @@ def get_raster_statistics(input_raster, force=True):
         stats.append({"min":s[0], "max":s[1], "mean":s[2], "stddev":s[3]})
     return stats
 
-'''json = '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[6.85546875,45.13555516012536],[7.778320312499999,45.935870621190546],[12.3486328125,46.73986059969267],[13.38134765625,45.598665689820656],[12.7880859375,44.38669150215206],[19.1162109375,40.17887331434696],[15.029296875,36.2265501474709],[7.6025390625,39.13006024213511],[7.470703125,41.343824581185686],[10.21728515625,41.44272637767212],[9.64599609375,43.14909399920127],[7.91015625,43.30919109985686],[7.580566406250001,43.89789239125797],[7.778320312499999,44.24519901522129],[7.00927734375,44.308126684886126],[6.85546875,45.13555516012536]]]}}]}';
+'''
+json = '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[6.85546875,45.13555516012536],[7.778320312499999,45.935870621190546],[12.3486328125,46.73986059969267],[13.38134765625,45.598665689820656],[12.7880859375,44.38669150215206],[19.1162109375,40.17887331434696],[15.029296875,36.2265501474709],[7.6025390625,39.13006024213511],[7.470703125,41.343824581185686],[10.21728515625,41.44272637767212],[9.64599609375,43.14909399920127],[7.91015625,43.30919109985686],[7.580566406250001,43.89789239125797],[7.778320312499999,44.24519901522129],[7.00927734375,44.308126684886126],[6.85546875,45.13555516012536]]]}}]}';
 json2 = '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-81.5625,-34.88593094075315],[-81.5625,11.86735091145932],[-28.125,11.86735091145932],[-28.125,-34.88593094075315],[-81.5625,-34.88593094075315]]]}}]}'
 input_raster = '/home/vortex/Desktop/TMP/output3_4326_tt_nodata.tif'
 zonalStats = get_zonalstatics_by_json(input_raster, json)
-print zonalStats
-'''
+print zonalStats     '''

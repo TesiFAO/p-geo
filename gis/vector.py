@@ -1,4 +1,4 @@
-from osgeo import gdal, ogr, osr
+from osgeo import ogr, osr
 import os
 import os.path
 
@@ -7,9 +7,10 @@ try:
 except Exception, e:
     from utils import filesystem, log
 
+
 def create_shp_from_feature(feat, projection=4326):
-    outputFile = filesystem.create_tmp_file();
-    '''
+    outputFile = filesystem.tmp_filename('shp_', '.shp')
+
     # TODO: srs get layer
     srs = osr.SpatialReference()
     srs.ImportFromEPSG(projection)
@@ -24,14 +25,11 @@ def create_shp_from_feature(feat, projection=4326):
     # geometry of the feature
     geom = feat.GetGeometryRef()
     outFeature.SetGeometry(geom)
-    outLayer.CreateFeature(outFeature)     '''
+    outLayer.CreateFeature(outFeature)
 
     return outputFile
 
-def createShapefileFromJSON(json_file, projection='EPSG:4326'):
-    outputFile =filesystem.create_tmp_file();
-    cmd = "ogr2ogr -skipfailures  -t_srs '" + projection + "' " + outputFile + " "+ json_file + " OGRGeoJSON"
-    os.system(cmd)
-    return outputFile
-
-create_shp_from_feature('')
+def create_shapefile_from_json(json_file, projection='EPSG:4326'):
+    output_file = filesystem.tmp_filename('shp_', '.shp')
+    os.system("ogr2ogr -skipfailures  -t_srs '" + projection + "' " + output_file + " "+ json_file + " OGRGeoJSON")
+    return output_file

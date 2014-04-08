@@ -1,5 +1,6 @@
 import os
 import sys
+import uuid
 try:
     from utils import log, config
 except Exception, e:
@@ -9,6 +10,7 @@ except Exception, e:
 
 l = log.Logger('filesystem')
 c = config.Config('MODIS')
+g = config.Config('general')
 
 def create_modis_structure(product, year, day):
     """
@@ -49,3 +51,16 @@ def fix_band_name(name):
         else:
             out += c
     return out
+
+def tmp_filename(prefix='', extension=''):
+    # the utf-8 encoding it's used to create a new .tif
+    return (g.get('tmp_dir') + '/' + prefix + str(uuid.uuid4()) + extension).encode('utf-8')
+
+def create_tmp_file(string_value, prefix='', extension=''):
+    filename = tmp_filename(prefix, extension)
+    text_file = open(filename, "w")
+    text_file.write(string_value)
+    text_file.close()
+    return filename
+
+print tmp_filename()

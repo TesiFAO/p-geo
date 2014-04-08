@@ -1,5 +1,5 @@
 {
     "loggingLevel"  :   "INFO",
     "loggerName"    :   "p-geo",
-    "tmp_folder"    :   "/home/vortex/Desktop/TMP"
+    "tmp_dir"    :   "/home/vortex/Desktop/TMP"
 }

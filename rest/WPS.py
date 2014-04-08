@@ -19,7 +19,7 @@ configGeoserver = geoserver.Geoserver()
 def createHistogram(layers):
     l = layers.split(":")
     #return Histogram.calculate_histogram(configGeoserver.get('datadir') + 'data/'+ l[0]+'/'+ l[1] + '/'+ l[1] +'.geotiff', 256);
-    return ''
+    return 'asd'
 
 if __name__ == '__main__':
     app.run(host=configWPS.get('ip'), port=configWPS.get('port'), debug=configWPS.get('debug'))

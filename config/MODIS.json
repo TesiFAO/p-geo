@@ -1,10 +1,19 @@
 {
-    "id"        :   "MODIS",
-    "ftp"       :   "ladsweb.nascom.nasa.gov",
-    "ftp_dir"   :   "/allData/5/",
-    "ip"        :   "127.0.0.1",
-    "targetDir" :   "/home/kalimaha/Desktop/MODIS",
-    "port"      :   1234,
-    "threads"   :   8,
-    "debug"     :   true
+    "id"            :   "MODIS",
+    "ftp"           :   "ladsweb.nascom.nasa.gov",
+    "ftp_dir"       :   "/allData/5/",
+    "ip"            :   "127.0.0.1",
+    "targetDir"     :   "/home/kalimaha/Desktop/MODIS",
+    "port"          :   1234,
+    "threads"       :   8,
+    "debug"         :   true,
+    "bands"         : {
+        "EVI"   :   "0",
+        "NDVI"  :   "1"
+    },
+    "subfolders"    : {
+        "original"  :   "original",
+        "output"    :   "output",
+        "tmp"       :   "tmp"
+    }
 }

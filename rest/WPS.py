@@ -15,10 +15,11 @@ except Exception, e:
     sys.path.append('../')
     from utils import rasterstats
 
-app = Flask(__name__)
-
 configWPS = config.Config('WPS')
 configGeoserver = geoserver.Geoserver()
+l = log.Logger()
+
+app = Flask(__name__)
 
 @app.route('/wps/hist/<layers>')
 @cross_origin()
@@ -27,7 +28,5 @@ def create_histogram(layers):
     return rasterstats.get_histogram(configGeoserver.get('datadir') + 'data/'+ l[0]+'/'+ l[1] + '/'+ l[1] +'.geotiff', 256);
 
 if __name__ == '__main__':
-    print configWPS.get('ip')
-    print configWPS.get('port')
-    print configWPS.get('debug')
+    l.info('start')
     app.run(host=configWPS.get('ip'), port=configWPS.get('port'), debug=configWPS.get('debug'))

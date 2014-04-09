@@ -24,7 +24,7 @@ def get_histogram( input_value_raster, force=False, buckets=256, include_out_of_
     max = ds.GetRasterBand(band).GetMaximum()
 
     histogram = ds.GetRasterBand(band).GetHistogram( buckets=buckets, min=min, max=max, include_out_of_range = include_out_of_range )
-    return {"buckets":buckets,"min":min,"max":max,"values":histogram}
+    return json.dumps({"buckets":buckets,"min":min,"max":max,"values":histogram}, )
 
 def get_raster_statistics(input_raster, force=True):
     src_ds = gdal.Open(input_raster)

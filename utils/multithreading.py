@@ -13,8 +13,8 @@ except Exception, e:
 
 exitFlag = 0
 c = config.Config('MODIS')
-l = log.Logger()
-product = 'MOD13A2'
+l = log.Logger('multithreading')
+product = 'MOD13Q1'
 year = '2014'
 day = '001'
 
@@ -36,7 +36,7 @@ def process_data(threadName, q):
         queueLock.acquire()
         if not workQueue.empty():
             data = q.get()
-            raster.modisDownloadExtractDelete(product, year, '001', data)
+            raster.modisDownloadExtractDelete(product, year, day, data)
             queueLock.release()
             l.info(threadName + ' processing ' + data)
         else:
@@ -104,7 +104,8 @@ for band in bands:
     name = product + '.' + year + '.' + day + '.' + band + '.4326.tif'
     out = c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/' + band + '/' + subfolders['output'] + '/' + name
     if not os.path.exists(out):
-        os.system("gdalwarp -srcnodata 0 -dstnodata nodata -multi -of GTiff -tr 0.00833333 -0.00833333  -s_srs '+proj=sinu +R=6371007.181 +nadgrids=@null +wktext' -co 'TILED=YES' -t_srs EPSG:4326 " + src + " " + out)
+        # os.system("gdalwarp -srcnodata 0 -dstnodata nodata -multi -of GTiff -tr 0.00833333 -0.00833333  -s_srs '+proj=sinu +R=6371007.181 +nadgrids=@null +wktext' -co 'TILED=YES' -t_srs EPSG:4326 " + src + " " + out)
+        os.system("gdalwarp -srcnodata 0 -dstnodata nodata -multi -of GTiff -tr 0.0020833325 -0.0020833325  -s_srs '+proj=sinu +R=6371007.181 +nadgrids=@null +wktext' -co 'TILED=YES' -t_srs EPSG:4326 " + src + " " + out)
     else:
         l.info(out + ' already exists')
     l.info('Create 4326 TIF for ' + band + ': DONE.')

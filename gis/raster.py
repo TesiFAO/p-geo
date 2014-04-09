@@ -10,7 +10,7 @@ except Exception, e:
     from utils import log, config, filesystem, ftp
 
 
-l = log.Logger()
+l = log.Logger('raster')
 c = config.Config('MODIS')
 
 

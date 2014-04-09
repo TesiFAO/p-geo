@@ -18,7 +18,7 @@ class Logger():
         self.config = c.Config('general')
         self.level = 'INFO'
         logging.basicConfig(level=self.config.get('loggingLevel'),
-                            format='%(asctime)s | %(levelname)-8s | %(message)s',
+                            format='%(asctime)s | %(levelname)-8s | %(name)-20s | Line: %(lineno)-5d | %(message)s',
                             datefmt='%d-%m-%Y | %H:%M:%s')
         self.logger = logging.getLogger(loggerName)
         self.logger.setLevel(self.level)

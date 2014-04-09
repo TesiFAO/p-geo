@@ -31,6 +31,8 @@ def create_modis_structure(product, year, day):
     #  Sub-folders for the bands
     bands = c.get('bands')
     subfolders = c.get('subfolders')
+    if not os.path.exists(c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/' + subfolders['original'] + '/'):
+        os.makedirs(c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/' + subfolders['original'] + '/')
     for k in bands:
         if not os.path.exists(c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/' + k + '/'):
             os.makedirs(c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/' + k + '/')

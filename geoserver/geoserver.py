@@ -249,16 +249,3 @@ class Geoserver():
             self.logger.info(d['datastore'] == default_datastore)
             return d
         return False
-
-
-g = Geoserver()
-#print g.get('username')
-#g.publish_raster('/home/vortex/Desktop/TMP/output3_4326_tt_nodata.tif', 'asdasdasd')
-#g.create_coveragestore('testasd', '/home/vortex/Desktop/TMP/output3_4326_tt_nodata.tif', 'fenix')
-#a = g.publish_coveragestore('guido_test', '/home/vortex/Desktop/TMP/output3_4326_tt_nodata.tif', 'fenix')
-#print str(a)
-
-#g.set_default_style('evi', 'guido_test')
-
-g.publish_shapefile('/home/vortex/Desktop/layers/test_import/nga_dams_4326.shp', 'nga_dams_4326_2',)
-

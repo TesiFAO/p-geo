@@ -10,6 +10,8 @@ except Exception, e:
     sys.path.append('../')
     from utils import filesystem
 
+# TODO: use force with min max and GetHistogram.
+# TODO: loop over the available bands to make an array
 def get_histogram( input_value_raster, force=False, buckets=256, include_out_of_range=0 ):
 
     ds = gdal.Open( input_value_raster )
@@ -100,7 +102,7 @@ def get_raster_statistics(input_raster, force=True):
         if stats is None:
             continue
         stats.append({"min":s[0], "max":s[1], "mean":s[2], "stddev":s[3]})
-    return stats
+    return json.dumps(stats)
 
 '''
 json = '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[6.85546875,45.13555516012536],[7.778320312499999,45.935870621190546],[12.3486328125,46.73986059969267],[13.38134765625,45.598665689820656],[12.7880859375,44.38669150215206],[19.1162109375,40.17887331434696],[15.029296875,36.2265501474709],[7.6025390625,39.13006024213511],[7.470703125,41.343824581185686],[10.21728515625,41.44272637767212],[9.64599609375,43.14909399920127],[7.91015625,43.30919109985686],[7.580566406250001,43.89789239125797],[7.778320312499999,44.24519901522129],[7.00927734375,44.308126684886126],[6.85546875,45.13555516012536]]]}}]}';

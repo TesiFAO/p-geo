@@ -261,4 +261,4 @@ g = Geoserver()
 #g.set_default_style('evi', 'guido_test')
 
 g.publish_shapefile('/home/vortex/Desktop/layers/test_import/nga_dams_4326.shp', 'nga_dams_4326_2',)
-#print 'HEREH: ' + g.delete_coveragestore('python_test')
+

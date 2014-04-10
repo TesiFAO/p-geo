@@ -202,12 +202,22 @@ class Geoserver():
             return False
 
     def publish_shapefile(self, input_shapefile, name, overwrite=False, workspace=None, projection=None, default_style=None, layertype=None, metadata=None):
-        self.logger.info('input_shapefile: ' + input_shapefile)
+        """
+        :param input_shapefile:
+        :param name:
+        :param overwrite:
+        :param workspace:
+        :param projection:
+        :param default_style:
+        :param layertype:
+        :param metadata:
+        :return:
+        """
 
         # TODO: check if it's a shp or zip
         '''
         if zip:
-            unzip "somewhere"
+            unzip "in tmp to be removed"
         '''
         datastore = self.get_default_datastore()
         postgis_utils.import_shapefile(datastore, input_shapefile, name )
@@ -217,6 +227,11 @@ class Geoserver():
         return "published"
 
     def publish_postgis_table(self, datastore, name):
+        """
+        :param datastore: datastore stored in geoserver
+        :param name: name of the table in postgis
+        :return:
+        """
         #curl -v -u admin:geoserver -XPOST -H "Content-type: text/xml" -d "<featureType><name>buildings</name></featureType>"
         #http://localhost:8080/geoserver/rest/workspaces/acme/datastores/nyc/featuretypes
         headers = {
@@ -224,12 +239,9 @@ class Geoserver():
             "Accept": "application/xml"
         }
         xml = "<featureType><name>{0}</name></featureType>".format(unicode(name).lower())
-        self.logger.info(xml)
         cs_url = url(self.service_url, ["workspaces", datastore['workspace'], "datastores", datastore['datastore'], 'featuretypes'])
-        self.logger.info(cs_url)
         headers, response = self.http.request(cs_url, "POST", xml, headers)
         self.logger.info(headers)
-        self.logger.info(response)
         if headers.status == 201:
             return True
         else:
@@ -249,3 +261,4 @@ class Geoserver():
             self.logger.info(d['datastore'] == default_datastore)
             return d
         return False
+

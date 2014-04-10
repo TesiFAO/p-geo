@@ -244,9 +244,9 @@ class Geoserver():
     def get_default_datastore(self):
         default_datastore = self.config.get('default_datastore')
         print default_datastore
-        datastore = self.config.get('datastore')
+        datastore = self.config.get('datastores')
         for d in datastore:
-            self.logger.info(d['id'] == default_datastore)
+            self.logger.info(d['datastore'] == default_datastore)
             return d
         return False
 
@@ -260,5 +260,5 @@ g = Geoserver()
 
 #g.set_default_style('evi', 'guido_test')
 
-#g.publish_shapefile('/home/vortex/Desktop/layers/test_import/nga_dams_4326.shp', 'nga_dams_4326',)
+g.publish_shapefile('/home/vortex/Desktop/layers/test_import/nga_dams_4326.shp', 'nga_dams_4326_2',)
 #print 'HEREH: ' + g.delete_coveragestore('python_test')

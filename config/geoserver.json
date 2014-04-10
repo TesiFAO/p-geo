@@ -1,18 +1,16 @@
 {
     "wmsurl"  : "http://localhost:8080/geoserver/wms",
     "resturl" : "http://localhost:8080/geoserver/rest",
-    "datadir" : "/datadir",
-    "username" : "user",
+    "datadir" : "/",
+    "username" : "username",
     "password" : "password",
     "default_workspace" : "workspace",
     "debug" : true,
     "default_datastore" : "datastore",
-    "datastore": [
+    "datastores": [
         {
-            "id": "datastore",
             "datastore" : "datastore",
             "workspace" : "workspace",
-
             "host" : "localhost",
             "port" : "5432",
             "username" : "username",

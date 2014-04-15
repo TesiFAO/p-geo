@@ -36,8 +36,8 @@ def process_data(threadName, q):
         queueLock.acquire()
         if not workQueue.empty():
             data = q.get()
-            raster.modisDownloadExtractDelete(product, year, day, data)
             queueLock.release()
+            raster.modisDownloadExtractDelete(product, year, day, data)
             l.info(threadName + ' processing ' + data)
         else:
             queueLock.release()

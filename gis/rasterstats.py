@@ -22,11 +22,15 @@ def get_histogram( input_value_raster, force=False, buckets=256, include_out_of_
 
     # force the calculation of min max and of the histogram?
     # get min and max values (force the recalculation?)
-    min = ds.GetRasterBand(band).GetMinimum()
-    max = ds.GetRasterBand(band).GetMaximum()
+    if (force == True ):
+        (min, max)= ds.GetRasterBand(band).ComputeRasterMinMax(0)
+    else:
+        min = ds.GetRasterBand(band).GetMinimum()
+        max = ds.GetRasterBand(band).GetMaximum()
 
     histogram = ds.GetRasterBand(band).GetHistogram( buckets=buckets, min=min, max=max, include_out_of_range = include_out_of_range )
-    return json.dumps({"buckets":buckets,"min":min,"max":max,"values":histogram}, )
+    #return json.dumps({"buckets":buckets,"min":min,"max":max,"values":histogram}, )
+    return {"buckets":buckets,"min":min,"max":max,"values":histogram}
 
 def get_raster_statistics(input_raster, force=True):
     src_ds = gdal.Open(input_raster)
@@ -45,10 +49,12 @@ def get_raster_statistics(input_raster, force=True):
         s = srcband.GetStatistics(False, force)
         if stats is None:
             continue
-        stats.append({"min":s[0], "max":s[1], "mean":s[2], "stddev":s[3]})
+        stats.append({"min":s[0],"max":s[1],"mean":s[2],"stddev":s[3]})
     return stats
 
-def get_zonalstatics_by_json(input_raster, json):
+def get_zonalstatics_by_json(input_raster, json, force=True):
+    print json
+    print '-------------  '
     json_file = filesystem.create_tmp_file(json, 'json_', '.json')
     shp_file = vector.create_shapefile_from_json(json_file)
     shp = ogr.Open(shp_file)
@@ -64,10 +70,10 @@ def get_zonalstatics_by_json(input_raster, json):
         # create a tmp raster
         raster_file = crop_raster_by_vector(input_raster, feature_shp_file )
         # do statistics on the new raster
-        stat = get_raster_statistics(raster_file)
+        stat = get_raster_statistics(raster_file, force)
         # calculate histogram
-        hist = get_histogram(raster_file)
-        stats.append({"fid": i, "stat": stat, "hist": hist})
+        hist = get_histogram(raster_file, force)
+        stats.append({"fid":i,"stat": stat,"hist": hist})
         # check next feature
         feature = lyr.GetNextFeature()
         i+=1

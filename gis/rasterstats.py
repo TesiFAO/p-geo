@@ -116,3 +116,4 @@ json2 = '{"type":"FeatureCollection","features":[{"type":"Feature","properties":
 input_raster = '/home/vortex/Desktop/TMP/output3_4326_tt_nodata.tif'
 zonalStats = get_zonalstatics_by_json(input_raster, json)
 print zonalStats     '''
+

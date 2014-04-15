@@ -39,6 +39,7 @@ def create_histogram(layers):
 @app.route('/wps/hist/<layers>/<geojson>', methods=['GET', 'POST'])
 @cross_origin()
 def create_histogram_geojson(layers, geojson):
+    # http://127.0.0.1:1236/wps/hist/fenix:output3_4326_deflate/%7B%22type%22:%22FeatureCollection%22,%22features%22:%5B%7B%22type%22:%22Feature%22,%22properties%22:%7B%7D,%22geometry%22:%7B%22type%22:%22Polygon%22,%22coordinates%22:%5B%5B%5B13.0078125,-36.03133177633187%5D,%5B13.0078125,-28.30438068296277%5D,%5B35.15625,-28.30438068296277%5D,%5B35.15625,-36.03133177633187%5D,%5B13.0078125,-36.03133177633187%5D%5D%5D%7D%7D%5D%7D
     if request.method == 'POST':
         print 'POST'
     else:

@@ -1,9 +1,11 @@
 {
     "wmsurl"  : "http://localhost:9090/geoserver/wms",
-    "resturl" : "http://localhost:9090/geoserver/rest",
+    "resturl" : "http://localhost:9091/geoserver/rest",
+    "geoserver_cluster" : ["http://localhost:9092/geoserver/rest"],
+
     "datadir" : "/home/vortex/programs/tomcat_geoservers/data/",
-    "username" : "fenix",
-    "password" : "nodefaultpw",
+    "username" : "admin",
+    "password" : "geoserver",
     "default_workspace" : "fenix",
     "debug" : true,
     "default_datastore" : "fenixSpatialDB",
@@ -13,8 +15,8 @@
             "workspace" : "fenix",
             "host" : "localhost",
             "port" : "5432",
-            "username" : "fenix",
-            "password" : "Qwaszx",
+            "username" : "username",
+            "password" : "password",
             "dbname" : "fenix-spatial"
         }
     ]

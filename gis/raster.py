@@ -11,8 +11,6 @@ except Exception, e:
 
 
 l = log.Logger('raster')
-c = config.Config('MODIS')
-
 
 def list_subdatasets(target_dir, filename):
     """
@@ -49,6 +47,7 @@ def extract_band(target_dir, band):
 
 def modisDownloadExtractDelete(product, year, day, layer):
 
+    c = config.Config('MODIS')
     filesystem.create_modis_structure(product, year, day)
     bands = c.get('bands')
     subfolders = c.get('subfolders')
@@ -87,3 +86,12 @@ def modisDownloadExtractDelete(product, year, day, layer):
                 l.info('GDAL Translate: done. [' + layer + ']')
         except Exception, e:
             l.error('Error during GDAL Translate: ' + e)
+
+def trmmDownloadExtractDelete(product, year, month, layer):
+
+    c = config.Config('TRMM')
+    filesystem.create_trmm_structure(product, year, month)
+    subfolders = c.get('subfolders')
+
+    dir = c.get('ftp_dir') + '/' + year + '/' + month + '/'
+    targetDir = c.get('targetDir') + '/' + product + '/' + year + '/' + month + '/' + subfolders['original'] + '/'

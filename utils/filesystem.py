@@ -9,7 +9,6 @@ except Exception, e:
 
 
 l = log.Logger('filesystem')
-c = config.Config('MODIS')
 g = config.Config('general')
 
 def create_modis_structure(product, year, day):
@@ -19,6 +18,8 @@ def create_modis_structure(product, year, day):
     @param year: Year, e.g. 2014
     @param day: Day, e.g. 001
     """
+    # Read configuration
+    c = config.Config('MODIS')
 
     # Main structure
     if not os.path.exists(c.get('targetDir') + '/' + product):
@@ -39,6 +40,24 @@ def create_modis_structure(product, year, day):
         for s in subfolders:
             if not os.path.exists(c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/' + k + '/' + s + '/'):
                 os.makedirs(c.get('targetDir') + '/' + product + '/' + year + '/' + day + '/' + k + '/' + s + '/')
+
+def create_trmm_structure(product, year, month):
+
+    # Read configuration
+    c = config.Config('TRMM')
+
+    # Main structure
+    if not os.path.exists(c.get('targetDir') + '/' + product):
+        os.makedirs(c.get('targetDir') + '/' + product)
+    if not os.path.exists(c.get('targetDir') + '/' + product + '/' + year):
+        os.makedirs(c.get('targetDir') + '/' + product + '/' + year)
+    if not os.path.exists(c.get('targetDir') + '/' + product + '/' + year + '/' + month):
+        os.makedirs(c.get('targetDir') + '/' + product + '/' + year + '/' + month)
+
+    #  Sub-folders for the bands
+    subfolders = c.get('subfolders')
+    if not os.path.exists(c.get('targetDir') + '/' + product + '/' + year + '/' + month + '/' + subfolders['original'] + '/'):
+        os.makedirs(c.get('targetDir') + '/' + product + '/' + year + '/' + month + '/' + subfolders['original'] + '/')
 
 def fix_band_name(name):
     """

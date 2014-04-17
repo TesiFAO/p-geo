@@ -1,0 +1,15 @@
+{
+    "id"            :   "TRMM",
+    "ftp"           :   "trmmopen.gsfc.nasa.gov",
+    "ftp_dir"       :   "/pub/gis/",
+    "ip"            :   "127.0.0.1",
+    "targetDir"     :   "/home/kalimaha/Desktop/TRMM",
+    "port"          :   1234,
+    "threads"       :   8,
+    "debug"         :   true,
+    "subfolders"    : {
+        "original"  :   "original",
+        "output"    :   "output",
+        "tmp"       :   "tmp"
+    }
+}

@@ -55,6 +55,13 @@ def coverage_stats(layers):
     l = layers.split(":")
     return json.dumps(rasterstats.get_raster_statistics(configGeoserver.get('datadir') + 'data/'+ l[0]+'/'+ l[1] + '/'+ l[1] +'.geotiff', False))
 
+@app.route('/wps')
+@cross_origin()
+def wps_home():
+    return "WPS processing"
+
+
+
 
 if __name__ == '__main__':
     l.info(configWPS.get('ip') + ':' + str(configWPS.get('port')))

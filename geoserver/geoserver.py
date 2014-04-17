@@ -113,6 +113,8 @@ class Geoserver():
                 return False
         finally:
             if hasattr(message, "close"):
+                # reload geoserver cluster
+                self.reload_configuration_geoserver_slaves()
                 message.close()
                 return True
             if archive is not None:
@@ -163,6 +165,8 @@ class Geoserver():
 
         if response.status == 200:
             #return (response, content)
+            # reload geoserver cluster
+            self.reload_configuration_geoserver_slaves()
             return 'coverage uploaded'
         else:
             self.logger.error("Tried to make a DELETE request to %s but got a %d status code: \n%s" % (rest_url, response.status, content))
@@ -197,6 +201,8 @@ class Geoserver():
         cs_url = url(self.service_url, ["layers", layername])
         headers, response = self.http.request(cs_url, "PUT", xml, headers)
         if headers.status == 200:
+            # reload geoserver cluster
+            self.reload_configuration_geoserver_slaves()
             return True
         else:
             return False
@@ -243,6 +249,8 @@ class Geoserver():
         headers, response = self.http.request(cs_url, "POST", xml, headers)
         self.logger.info(headers)
         if headers.status == 201:
+            # reload geoserver cluster
+            self.reload_configuration_geoserver_slaves()
             return True
         else:
             return False
@@ -262,3 +270,14 @@ class Geoserver():
             return d
         return False
 
+    def reload_configuration_geoserver_slaves(self):
+        geoserver_cluster = self.config.get("geoserver_cluster")
+        for geoserver in geoserver_cluster:
+            print geoserver
+            cs_url =  url(geoserver, ["reload?recurse=true"])
+            headers, response = self.http.request(cs_url, "POST")
+            self.logger.info(headers)
+            if headers.status == 200:
+                return True
+            else:
+                return False

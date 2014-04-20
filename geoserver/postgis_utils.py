@@ -23,6 +23,10 @@ def _connect_to_db(databaseServer, databasePort,databaseName, databaseUser, data
     ogrds = ogr.Open(connString)
     return ogrds
 
+def get_db_connect_string(datastore):
+    db_connect_string = "PG: host=%s port='%s' dbname=%s user=%s password=%s" %(datastore['host'], datastore['port'],datastore['dbname'], datastore['username'], datastore['password'])
+    return db_connect_string
+
 def _import_shapefile(ogrds, shapefile, table, overwrite):
     ogr.RegisterAll()
     shapeDS = ogr.Open(shapefile)

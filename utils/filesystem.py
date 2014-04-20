@@ -1,6 +1,7 @@
 import os
 import sys
 import uuid
+import zipfile
 try:
     from utils import log, config
 except Exception, e:
@@ -73,6 +74,9 @@ def fix_band_name(name):
             out += c
     return out
 
+def tmp_path():
+    return g.get('tmp_dir')
+
 def tmp_filename(prefix='', extension=''):
     # the utf-8 encoding it's used to create a new .tif
     return (g.get('tmp_dir') + '/' + prefix + str(uuid.uuid4()) + extension).encode('utf-8')
@@ -83,3 +87,9 @@ def create_tmp_file(string_value, prefix='', extension=''):
     text_file.write(string_value)
     text_file.close()
     return filename
+
+def unzip(filezip, prefix='', extension=''):
+    path = g.get('tmp_dir')
+    with zipfile.ZipFile(filezip, "r") as z:
+        z.extractall(path)
+    return path

@@ -63,11 +63,11 @@ class Geoserver():
         """
         return self.config.get(property)
 
-    def publish_raster(self, input_raster, name, layertype='GEOTIFF', workspace='fenix', metadata=''):
+    '''def publish_raster(self, input_raster, name, layertype='GEOTIFF', workspace='fenix', metadata=''):
         self.logger.info('raster: ' + input_raster)
         #cmd = "curl -u '"+ self.config.get('username') +":" + self.config.get('password') + "' -XPUT -H 'Content-type:image/tiff' -T "+ input_raster + " " + self.config.get('resturl') +"/workspaces/"+ workspace +"/coveragestores/"+ name +"/file.geotiff"
         return "published"
-
+    '''
     def publish_coveragestore(self, name, data, workspace=None, overwrite=False ):
         if not overwrite:
             try:
@@ -82,6 +82,7 @@ class Geoserver():
 
         if workspace is None:
             workspace = self.get_default_workspace()
+
         headers = {
             "Content-type": "image/tiff",
             "Accept": "application/xml"
@@ -90,9 +91,12 @@ class Geoserver():
         archive = None
         ext = "geotiff"
 
+        print data
+        print dict
         if isinstance(data, dict):
             # handle 'tfw' (worldimage)
             archive = prepare_upload_bundle(name, data)
+            print archive
             message = open(archive, 'rb')
             if "tfw" in data:
                 headers['Content-type'] = 'application/archive'

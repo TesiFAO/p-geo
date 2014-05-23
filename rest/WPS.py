@@ -19,7 +19,7 @@ except Exception, e:
 
 
 try:
-        from gis import rasterstats
+    from gis import rasterstats
 except Exception, e:
     sys.path.append('../')
     from utils import rasterstats

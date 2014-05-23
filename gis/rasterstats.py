@@ -133,7 +133,7 @@ def get_raster_statistics(input_raster, force=True):
         if stats is None:
             continue
         stats.append({"min":s[0], "max":s[1], "mean":s[2], "stddev":s[3]})
-    return json.dumps(stats)
+    return stats
 
 def cell_rasters_value(rasters, x, y, band=None):
     values = []
@@ -152,35 +152,16 @@ def cell_raster_value(raster, x, y, band=None):
     return output.strip()
     #return { raster : output.strip() }
 
-def test():
-    #tiffs = glob.glob("/home/vortex/programs/layers/raster/TRMM/3B42RT/2014/03/original/*.tif")
-    # tiffs = glob.glob("/home/vortex/programs/layers/raster/RASTER/Vegetation/NDVI/*.tif")
-    #tiffs = glob.glob("/home/vortex/programs/layers/raster/TRMM/3B42RT/2014/03/original/geotiff/*.tif")
-    tiffs = glob.glob("/home/vortex/Desktop/TRMM/3B42RT/all/*.tif")
-    #tiff = ["/home/vortex/programs/layers/raster/RASTER/Terrain/DEM_30/NGA_DEM_30.tif"]
-    return cell_rasters_value(tiffs,7.42029131585, 9.86668319136)
-    #return cell_rasters_value(tiffs, 807554.158945, 1003293.38818)
-
-#test()
-
-a = crop_raster_by_vector_postgis('/home/vortex/Desktop/TRMM/3B42RT/2014/04/original/3B42RT.2014042000.7.1day.tif', 'g2008_4326', "select * from g2008_4326 where adm0_name='Italy'")
-print a
-
-'''
-json = '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[6.85546875,45.13555516012536],[7.778320312499999,45.935870621190546],[12.3486328125,46.73986059969267],[13.38134765625,45.598665689820656],[12.7880859375,44.38669150215206],[19.1162109375,40.17887331434696],[15.029296875,36.2265501474709],[7.6025390625,39.13006024213511],[7.470703125,41.343824581185686],[10.21728515625,41.44272637767212],[9.64599609375,43.14909399920127],[7.91015625,43.30919109985686],[7.580566406250001,43.89789239125797],[7.778320312499999,44.24519901522129],[7.00927734375,44.308126684886126],[6.85546875,45.13555516012536]]]}}]}';
-json2 = '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-81.5625,-34.88593094075315],[-81.5625,11.86735091145932],[-28.125,11.86735091145932],[-28.125,-34.88593094075315],[-81.5625,-34.88593094075315]]]}}]}'
-input_raster = '/home/vortex/Desktop/TMP/output3_4326_tt_nodata.tif'
-zonalStats = get_zonalstatics_by_json(input_raster, json)
-print zonalStats
-cell_raster_value("/home/vortex/programs/layers/raster/TRMM/3B42RT/2014/03/original/geotiff/3B42RT.2014030100.7.1day.tif", 7.664, 2.4)
-
-'''
-
-'''tmp = gdal.Open("/home/vortex/programs/layers/raster/TRMM/3B42RT/2014/03/original/geotiff/3B42RT.2014030100.7.1day.tif")
-geoT = tmp.GetGeoTransform();
-print geoT
-proj= tmp.GetProjection();
-print proj
-
-a = numpy.greater(tmp.ReadAsArray(), 0)
-print a'''
+# def test():
+#     #tiffs = glob.glob("/home/vortex/programs/layers/raster/TRMM/3B42RT/2014/03/original/*.tif")
+#     # tiffs = glob.glob("/home/vortex/programs/layers/raster/RASTER/Vegetation/NDVI/*.tif")
+#     #tiffs = glob.glob("/home/vortex/programs/layers/raster/TRMM/3B42RT/2014/03/original/geotiff/*.tif")
+#     tiffs = glob.glob("/home/vortex/Desktop/TRMM/3B42RT/all/*.tif")
+#     #tiff = ["/home/vortex/programs/layers/raster/RASTER/Terrain/DEM_30/NGA_DEM_30.tif"]
+#     return cell_rasters_value(tiffs,7.42029131585, 9.86668319136)
+#     #return cell_rasters_value(tiffs, 807554.158945, 1003293.38818)
+#
+# #test()
+#
+# a = crop_raster_by_vector_postgis('/home/vortex/Desktop/TRMM/3B42RT/2014/04/original/3B42RT.2014042000.7.1day.tif', 'g2008_4326', "select * from g2008_4326 where adm0_name='Italy'")
+# print a

@@ -1,0 +1,14 @@
+{
+    "id"        :   "geometadata",
+    "ip"        :   "168.202.28.214",
+    "port"      :   10800,
+    "debug"     :   true,
+    "database"  :   {
+        "connection" : "mongodb://exldvsdmxreg1.ext.fao.org:27017/",
+        "db" : "geometadata",
+        "document" : {
+            "layer" : "layer",
+            "stats" : "stats"
+        }
+    }
+}

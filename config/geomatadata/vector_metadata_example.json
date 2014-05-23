@@ -1,0 +1,14 @@
+{
+    "layername" : "gaul0_faostat_3857",
+    "layertitle" : "Highlighted Countries",
+
+    "style" : "gaul0_highlight_polygon",
+
+    "srs" : "EPSG:4326",
+
+    // server? o a livello applicazione? con geoserver unico?
+    "urlWMS" : "http://hqlprfenixapp1.hq.un.fao.org:10090/geoserver/wms",
+
+    "code" : "",
+    "date" : ""
+}

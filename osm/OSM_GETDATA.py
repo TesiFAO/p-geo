@@ -9,7 +9,7 @@ f = csv.writer(open(filename, "wb+"))
 f.writerow(["code", "name", "type", "lang", "shown", "onosm", "class", "place_id", "boundingbox", "lat", "lon", "geo"]);
 
 # queries = ["Nairobi","Mombasa","Kisumu","Nakuru","Eldoret","Malindi","Marimanti","Imenti","Nyahururu","Kitale","Kakamega","Machakos","Kisii","Busia","Taveta","Loitokitok","Embu","Kitui","Chwele","Tharaka","Isiolo","Kajiado"]
-queries = ["lazio"]
+queries = ["Laz", "Lazio"]
 
 # filtering by Kenya
 additional_parameters = "&countrycodes=it"

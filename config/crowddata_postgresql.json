@@ -6,8 +6,8 @@
     "database"  :   {
         "host" : "faostat3.fao.org",
         "port" : "5432",
-        "username" : "admin",
-        "password" : "admin",
+        "username" : "fenix",
+        "password" : "Qwaszx",
         "dbname" : "cd-ita"
     }
 }

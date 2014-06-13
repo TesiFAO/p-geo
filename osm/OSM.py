@@ -64,7 +64,7 @@ class OSM:
                                 "true",
                                 x["class"].encode('utf-8'),
                                 x["place_id"],
-                                x["boundingbox"],
+                                ','.join(x["boundingbox"]),
                                 x["lat"],
                                 x["lon"],
                                 ""

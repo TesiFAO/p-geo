@@ -1,30 +1,14 @@
-CREATE TABLE city (
-  -- UUID lenght
-  code char(36),
-  name varchar(80),
-  lang varchar(2),
-  type varchar(10),
-  shown boolean,
-  lat double precision,
-  lon double precision,
-  geo geometry,
-  CONSTRAINT city_pkey PRIMARY KEY (code),
-  CONSTRAINT enforce_dims_the_geom CHECK (st_ndims(geo) = 2),
-  CONSTRAINT enforce_geotype_geom CHECK (geometrytype(geo) = 'POINT'::text OR geo IS NULL),
-  CONSTRAINT enforce_srid_the_geom CHECK (st_srid(geo) = 4326)
-);
-CREATE INDEX city_gix ON city USING GIST (geo);
-CREATE INDEX city_ix  ON city(code, lang);
-
-
 CREATE TABLE market (
   -- use foreign key for data integrity?
-  -- parentcode varchar(36) references city(code),
-  parentcode char(36),
-  code char(36),
-  name varchar(80),
+  code varchar(36),
+  name text,
+  type text,
   lang varchar(2),
   shown boolean,
+  onosm boolean,
+  class text,
+  place_id varchar(64),
+  boundingbox varchar(100),
   lat float,
   lon float,
   geo geometry,
@@ -36,9 +20,15 @@ CREATE TABLE market (
 CREATE INDEX market_gix ON market USING GIST (geo);
 CREATE INDEX market_ix  ON market(code, lang);
 
+CREATE TABLE vendor (
+  parentcode char(36) references market(code)
+) INHERITS (market);
+CONSTRAINT vendor_pkey PRIMARY KEY (code),
+CREATE INDEX vendor_gix ON vendor USING GIST (geo);
+
 
 CREATE TABLE saletype (
-  code char(36),
+  code varchar(36),
   name varchar(80),
   lang varchar(2),
   CONSTRAINT saletype_pkey PRIMARY KEY (code)
@@ -46,33 +36,12 @@ CREATE TABLE saletype (
 CREATE INDEX saletype_id  ON saletype(code, lang);
 
 
-CREATE TABLE vendor (
-  code varchar(36) primary key,
-  name text,
-  type varchar(10),
-  lang varchar(2),
-  shown boolean,
-  -- OSM data
-  onosm boolean,
-  type varchar(50),
-  class varchar(50),
-  place_id varchar(50),
-  boundingbox varchar(100),
-  lat double precision,
-  lon double precision,
-  geo geometry,
-  CONSTRAINT enforce_dims_the_geom CHECK (st_ndims(geo) = 2),
-  CONSTRAINT enforce_geotype_geom CHECK (geometrytype(geo) = 'POINT'::text OR geo IS NULL),
-  CONSTRAINT enforce_srid_the_geom CHECK (st_srid(geo) = 4326)
-);
-CREATE INDEX vendor_gix ON vendor USING GIST (geo);
-
 CREATE TABLE commodity (
+  version varchar(10),
   code varchar(36),
-  name varchar(80),
+  basic_element_flag varchar(2),
+  name text,
   lang varchar(2),
-  divisor double precision,
-  shown boolean,
   CONSTRAINT commodity_pkey PRIMARY KEY (code)
 );
 CREATE INDEX commodity_ix ON commodity(code, lang);
@@ -82,10 +51,8 @@ CREATE TABLE variety (
   code varchar(36),
   -- use foreign key for data integrity?
   -- use parentcode?
-  name varchar(80),
+  name text,
   lang varchar(2),
-  divisor double precision,
-  shown boolean,
   CONSTRAINT variety_pkey PRIMARY KEY (code)
 );
 CREATE INDEX variety_ix ON variety(code, lang);
@@ -93,9 +60,9 @@ CREATE INDEX variety2_ix ON variety(code);
 
 CREATE TABLE munit (
   code varchar(36) primary key,
-  name varchar(80),
-  fullname varchar(80),
-  description varchar(80),
+  name text,
+  fullname text,
+  description text,
   lang varchar(2),
   shown boolean
 );
@@ -113,7 +80,7 @@ CREATE INDEX currency_ix ON currency(code, lang);
 
 CREATE TABLE gaul0 (
   code varchar(36) primary key,
-  name varchar(80)
+  name text
 );
 
 CREATE TABLE users (
@@ -131,9 +98,6 @@ CREATE TABLE data (
   id BIGSERIAL PRIMARY KEY,
   -- TODO: use gaulcode (retrieved at runtime)
   gaul0code varchar(36),
-  gaul1code varchar(36),
-  gaul2code varchar(36),
-  citycode varchar(36) references city(code),
   marketcode varchar(36) references market(code),
   munitcode varchar(36) references munit(code),
   currencycode varchar(36) references currency(code),
@@ -170,33 +134,27 @@ CREATE INDEX map2_ix ON data(commoditycode, varietycode, date, munitcode, curren
 VACUUM FULL ANALYZE data;
 
 -- Import data
--- city
-\set folder_data '/home/vortex/repos/FENIX-MAPS/p-geo/config/crowddata/city.csv';
-COPY city FROM '/home/vortex/repos/FENIX-MAPS/p-geo/config/crowddata/city.csv' DELIMITER ',' CSV HEADER;
-UPDATE city SET geo = ST_GeomFromText('POINT(' || lon || ' ' || lat || ')',4326);
 
 -- market
-COPY market FROM '/home/vortex/repos/FENIX-MAPS/p-geo/config/crowddata/market.csv' DELIMITER ',' CSV HEADER;
+COPY market FROM '/work/crowddata/markets_kenya.csv' DELIMITER ',' CSV HEADER;
+COPY market FROM '/work/crowddata/markets_bangladesh.csv' DELIMITER ',' CSV HEADER;
+COPY market FROM '/work/crowddata/italy.csv' DELIMITER ',' CSV HEADER;
 UPDATE market SET geo = ST_GeomFromText('POINT(' || lon || ' ' || lat || ')',4326);
 
--- vendor (ii it needed?)
-COPY vendor FROM '/home/vortex/repos/FENIX-MAPS/p-geo/config/crowddata/vendor.csv' DELIMITER ',' CSV HEADER;
-UPDATE vendor SET geo = ST_GeomFromText('POINT(' || lon || ' ' || lat || ')',4326);
-
 -- commodity
-COPY commodity FROM '/home/vortex/repos/FENIX-MAPS/p-geo/config/crowddata/commodity.csv' DELIMITER ',' CSV HEADER;
+COPY commodity FROM '/work/crowddata/HS_2012.csv' DELIMITER ',' CSV HEADER;
 
 -- variety
-COPY variety FROM '/home/vortex/repos/FENIX-MAPS/p-geo/config/crowddata/variety.csv' DELIMITER ',' CSV HEADER;
+-- COPY variety FROM '/work/crowddata/variety.csv' DELIMITER ',' CSV HEADER;
 
 -- munit
-COPY munit FROM '/home/vortex/repos/FENIX-MAPS/p-geo/config/crowddata/munit.csv' DELIMITER ',' CSV HEADER;
+COPY munit FROM '/work/crowddata/munit.csv' DELIMITER ',' CSV HEADER;
 
 -- currency
-COPY currency FROM '/home/vortex/repos/FENIX-MAPS/p-geo/config/crowddata/currency.csv' DELIMITER ',' CSV HEADER;
+COPY currency FROM '/work/crowddata/currency.csv' DELIMITER ',' CSV HEADER;
 
 -- saletype
-COPY saletype FROM '/home/vortex/repos/FENIX-MAPS/p-geo/config/crowddata/saletype.csv' DELIMITER ',' CSV HEADER;
+COPY saletype FROM '/work/crowddata/saletype.csv' DELIMITER ',' CSV HEADER;
 
 
 
@@ -206,49 +164,3 @@ COPY saletype FROM '/home/vortex/repos/FENIX-MAPS/p-geo/config/crowddata/saletyp
 -- END' LANGUAGE 'plpgsql';
 --
 -- CREATE TRIGGER my_trigger AFTER INSERT ON test FOR EACH STATEMENT EXECUTE PROCEDURE my_trigger_function()
-
-
-
-
-
-
-
--- cambiamenti:
---
--- notes in note
--- fulldate serve?
---
---
---
--- {
--- "munitsymbol" : "kg",
---  "vendorcode" : 1,
---  "varietyname" : "Variety of Cooking Bananas",
---  "fulldate" : ISODate("2014-05-20T12:27:16Z"),
---  "munitcode" : 1, "timezone" : "GMT+00:00",
---  "untouchedprice" : 324,
---  "marketcode" : 1,
---  "varietycode" : 0,
---  "nationcode" : 1,
---  "currencycode" : 1,
---  "commoditycode" : 12,
---  "price" : 40,
---  "commodityname" :
---  "Cooking Bananas",
---  "citycode" : 0,
---  "marketname" :
---  "Market of Nairobi",
---  "date" : ISODate("2013-11-02T00:00:00Z"),
---  "geo" : { "type" : "Point", "coordinates" : [ -2.3076443553579207, 31.647173039367384 ] },
---  "vendorname" : "Vendor of Nairobi",
---  "kind" : 0,
---  "notes" : "",
---  "currencysymbol" : "KSh",
---  "quantity" : 22 }
-
-
-
-
-
-
--- { "munitsymbol" : "kg", "vendorcode" : 1, "varietyname" : "Variety of Cooking Bananas", "fulldate" : ISODate("2014-05-20T12:27:16Z"), "munitcode" : 1, "timezone" : "GMT+00:00", "untouchedprice" : 324, "marketcode" : 1, "varietycode" : 0, "nationcode" : 1, "currencycode" : 1, "commoditycode" : 12, "price" : 40, "commodityname" : "Cooking Bananas", "citycode" : 0, "marketname" : "Market of Nairobi", "date" : ISODate("2013-11-02T00:00:00Z"), "geo" : { "type" : "Point", "coordinates" : [ -2.3076443553579207, 31.647173039367384 ] }, "vendorname" : "Vendor of Nairobi", "kind" : 0, "notes" : "", "currencysymbol" : "KSh", "quantity" : 22 }

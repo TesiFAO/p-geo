@@ -1,0 +1,14 @@
+{
+    "id"        :   "crowddata",
+    "ip"        :   "168.202.28.214",
+    "port"      :   10900,
+    "debug"     :   true,
+    "database"  :   {
+        "connection" : "mongodb://exldvsdmxreg1.ext.fao.org:27017/",
+        "db" : "crowddata",
+        "document" : {
+            "data" : "data",
+            "date" : "date"
+        }
+    }
+}

@@ -119,7 +119,7 @@
             var code = $("#" + o.dropdown.id).val();
 
             queryMap(code, rangeValues.min, rangeValues.max)
-            queryTimeserieChart(code, rangeValues.min, rangeValues.max)
+           // queryTimeserieChart(code, rangeValues.min, rangeValues.max)
         }
 
         var queryTimeserieChart = function(code, startdate, enddate) {
@@ -161,19 +161,19 @@
             enddate = endyear + "," + endmonth  + "," + endday
             var bbox = o.map.mapObject.getBounds();
 
-            var a = { "type": "Polygon",
-                "coordinates": [
-                    [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ]
-                ]
-            }
-            var bounds3 = new L.LatLngBounds(bbox.getSouthWest(), bbox.getNorthEast());
-            console.log(bounds)
+//            var a = { "type": "Polygon",
+//                "coordinates": [
+//                    [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ]
+//                ]
+//            }
+//            var bounds3 = new L.LatLngBounds(bbox.getSouthWest(), bbox.getNorthEast());
+//            console.log(bounds)
 
 
             $.ajax({
                 type : 'GET',
-                //url : o.map.url + "/" + code + "/" + startdate + "/" + enddate + "/*",
-                url: o.map.url + "/" + code + "/" + startdate + "/" + enddate + "/" +bbox,
+                url : o.map.url + "/" + code + "/" + startdate + "/" + enddate + "/*",
+                //url: o.map.url + "/" + code + "/" + startdate + "/" + enddate + "/" +bbox,
                 success : function(response) {
 
                     try {

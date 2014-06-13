@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <link rel='icon' type='image/png' href='http://fenixapps.fao.org/repository/favicon/faostat.png'>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Crowddata</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css">
+
+    <!-- JQuery -->
+    <script type='text/javascript' src="http://fenixapps.fao.org/repository/js/jquery/1.10.2/jquery-1.10.2.min.js"></script>
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+
+    <link rel="stylesheet" href="http://fenixapps.fao.org/repository/js/leaflet/plugins/leaflet.markecluster/1.1/MarkerCluster.Default.css" />
+    <script src="http://fenixapps.fao.org/repository/js/leaflet/plugins/leaflet.markecluster/1.1/leaflet.markercluster.js"></script>
+
+
+    <!-- choosen css -->
+    <link href='http://fenixapps.fao.org/repository/js/chosen/1.1.0/chosen.min.css' rel='stylesheet'>
+
+    <!-- choosen JS -->
+    <script type='text/javascript' src='http://fenixapps.fao.org/repository/js/chosen/1.1.0/chosen.jquery.min.js'></script>
+
+
+    <!-- Jqrange slider -->
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+    <!-- Slider -->
+    <script type="text/javascript" src="http://fenixapps.fao.org/repository/js/jquery.rangeslider/5.7.0/jQDateRangeSlider-min.js"></script>
+    <link rel="stylesheet" href="http://fenixapps.fao.org/repository/js/jquery.rangeslider/5.7.0/css/iThing.css" type="text/css" />
+
+
+    <!-- Highchart -->
+    <!--    <script src="http://fenixapps.fao.org/repository/js/highcharts/4.0.1/js/highcharts.js"></script>
+        <script src="http://fenixapps.fao.org/repository/js/highcharts/4.0.1/js/modules/exporting.js"></script>-->
+
+    <!--<script src="http://fenixapps.fao.org/repository/js/highstock/2.0.1/highstock.js"></script>-->
+    <!--<script src="http://fenixapps.fao.org/repository/js/highstock/2.0.1/modules/exporting.js"></script>-->
+
+    <script src="http://code.highcharts.com/stock/highstock.js"></script>
+    <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+
+    <!-- Crowddata -->
+    <script type='text/javascript' src='crowddata-postgresql.js'></script>
+    <script type='text/javascript' src='crowddata-chart-postgresql.js'></script>
+
+
+    <style>
+
+    </style>
+
+</head>
+
+<body onload="initialize();">
+
+<div class="container">
+    <div class="page-header">
+        <h1>Crowd Data</h1>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3">
+            <h3>Commodity</h3>
+            <div id="dropdown"></div>
+        </div>
+        <div class="col-lg-6">
+            <div id="daterangeslider" style="position: relative; top: 10px;"></div>
+        </div>
+        <button id='apply' type="button" class="btn btn-default btn-lg">
+            <span class="glyphicon glyphicon-play"></span> Apply
+        </button>
+    </div>
+</div>
+<div class="container"  style="padding-top: 50px;">
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="map" style="height: 450px;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="container"  style="padding-top: 50px;">
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="timeserie" style="height: 450px;"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+<script>
+
+    function initialize() {
+        var o = {};
+        var f = Crowddata();
+        f.init(o);
+
+    }
+
+</script>

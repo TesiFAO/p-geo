@@ -102,7 +102,6 @@ def wps_home():
     return "WPS processing"
 
 
-
 if __name__ == '__main__':
     l.info(configWPS.get('ip') + ':' + str(configWPS.get('port')))
     app.run(host=configWPS.get('ip'), port=configWPS.get('port'), debug=configWPS.get('debug'), threaded=True)

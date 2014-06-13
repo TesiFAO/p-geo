@@ -4,11 +4,10 @@
     "port"      :   10900,
     "debug"     :   true,
     "database"  :   {
-        "connection" : "mongodb://exldvsdmxreg1.ext.fao.org:27017/",
-        "db" : "crowddata",
-        "document" : {
-            "data" : "data",
-            "date" : "date"
-        }
+        "host" : "faostat3.fao.org",
+        "port" : "5432",
+        "username" : "admin",
+        "password" : "admin",
+        "dbname" : "cd-ita"
     }
 }

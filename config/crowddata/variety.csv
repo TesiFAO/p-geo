@@ -1,43 +1,43 @@
-commoditycode,code,name,divisor,shown
-0,0,Variety of Avocado,90,true
-1,1,Variety of Beans Canadian,90,true
-2,2,Variety of Beans Dolichos (Njahi),90,true
-3,3,Variety of Beans Mwitemania,90,true
-4,4,Variety of Beans Rosecoco,90,true
-5,5,Variety of Brinjals,44,true
-6,6,Variety of Cabbages,126,true
-7,7,Variety of Capsicums,50,true
-8,8,Variety of Carrots,138,true
-9,9,Variety of Cassava Fresh,99,true
-10,10,Variety of Cauliflower,39,true
-11,11,Variety of Chillies,38,true
-12,12,Variety of Cooking Bananas,22,true
-13,13,Variety of Cowpeas,90,true
-14,14,Variety of Cucumber,50,true
-15,15,Variety of Dry Maize,90,true
-16,16,Variety of Eggs,1,true
-17,17,Variety of Finger Millet,90,true
-18,18,Variety of Fresh Peas,51,true
-19,19,Variety of Green Gram,90,true
-20,20,Variety of Green Maize,115,true
-21,21,Variety of Groundnuts,110,true
-22,22,Variety of Kales,50,true
-23,23,Variety of Lemons,95,true
-24,24,Variety of Lettuce,51,true
-25,25,Variety of Limes,13,true
-26,26,Variety of Mangoes Local,126,true
-27,27,Variety of Mangoes Ngowe,25,true
-28,28,Variety of Mwezi Moja,90,true
-29,29,Variety of Onions Dry,142,true
-30,30,Variety of Oranges,93,true
-31,31,Variety of Passion Fruits,57,true
-32,32,Variety of Pawpaw,54,true
-33,33,Variety of Pineapples,13,true
-34,34,Variety of Red Irish Potatoes,110,true
-35,35,Variety of Ripe Bananas,14,true
-36,36,Variety of Sorghum,90,true
-37,37,Variety of Spring Onions,142,true
-38,38,Variety of Sweet Potatoes,98,true
-39,39,Variety of Tomatoes,64,true
-40,40,Variety of Wheat,90,true
-41,41,Variety of White Irish Potatoes,110,true
+commoditycode,code,name,lang,divisor,shown
+0,0,Variety of Avocado,en,90,true
+1,1,Variety of Beans Canadian,en,90,true
+2,2,Variety of Beans Dolichos (Njahi),en,90,true
+3,3,Variety of Beans Mwitemania,en,90,true
+4,4,Variety of Beans Rosecoco,en,90,true
+5,5,Variety of Brinjals,en,44,true
+6,6,Variety of Cabbages,en,126,true
+7,7,Variety of Capsicums,en,50,true
+8,8,Variety of Carrots,en,138,true
+9,9,Variety of Cassava Fresh,en,99,true
+10,10,Variety of Cauliflower,en,39,true
+11,11,Variety of Chillies,en,38,true
+12,12,Variety of Cooking Bananas,en,22,true
+13,13,Variety of Cowpeas,en,90,true
+14,14,Variety of Cucumber,en,50,true
+15,15,Variety of Dry Maize,en,90,true
+16,16,Variety of Eggs,en,1,true
+17,17,Variety of Finger Millet,en,90,true
+18,18,Variety of Fresh Peas,en,51,true
+19,19,Variety of Green Gram,en,90,true
+20,20,Variety of Green Maize,en,115,true
+21,21,Variety of Groundnuts,en,110,true
+22,22,Variety of Kales,en,50,true
+23,23,Variety of Lemons,en,95,true
+24,24,Variety of Lettuce,en,51,true
+25,25,Variety of Limes,en,13,true
+26,26,Variety of Mangoes Local,en,126,true
+27,27,Variety of Mangoes Ngowe,en,25,true
+28,28,Variety of Mwezi Moja,en,90,true
+29,29,Variety of Onions Dry,en,142,true
+30,30,Variety of Oranges,en,93,true
+31,31,Variety of Passion Fruits,en,57,true
+32,32,Variety of Pawpaw,en,54,true
+33,33,Variety of Pineapples,en,13,true
+34,34,Variety of Red Irish Potatoes,en,110,true
+35,35,Variety of Ripe Bananas,en,14,true
+36,36,Variety of Sorghum,en,90,true
+37,37,Variety of Spring Onions,en,142,true
+38,38,Variety of Sweet Potatoes,en,98,true
+39,39,Variety of Tomatoes,en,64,true
+40,40,Variety of Wheat,en,90,true
+41,41,Variety of White Irish Potatoes,en,110,true

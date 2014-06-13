@@ -1,0 +1,43 @@
+code,name,lang,divisor,shown
+0,Avocado,en,90,true
+1,Beans Canadian,en,90,true
+2,Beans Dolichos (Njahi),en,90,true
+3,Beans Mwitemania,en,90,true
+4,Beans Rosecoco,en,90,true
+5,Brinjals,en,44,true
+6,Cabbages,en,126,true
+7,Capsicums,en,50,true
+8,Carrots,en,138,true
+9,Cassava Fresh,en,99,true
+10,Cauliflower,en,39,true
+11,Chillies,en,38,true
+12,Cooking Bananas,en,22,true
+13,Cowpeas,en,90,true
+14,Cucumber,en,50,true
+15,Dry Maize,en,90,true
+16,Eggs,en,1,true
+17,Finger Millet,en,90,true
+18,Fresh Peas,en,51,true
+19,Green Gram,en,90,true
+20,Green Maize,en,115,true
+21,Groundnuts,en,110,true
+22,Kales,en,50,true
+23,Lemons,en,95,true
+24,Lettuce,en,51,true
+25,Limes,en,13,true
+26,Mangoes Local,en,126,true
+27,Mangoes Ngowe,en,25,true
+28,Mwezi Moja,en,90,true
+29,Onions Dry,en,142,true
+30,Oranges,en,93,true
+31,Passion Fruits,en,57,true
+32,Pawpaw,en,54,true
+33,Pineapples,en,13,true
+34,Red Irish Potatoes,en,110,true
+35,Ripe Bananas,en,14,true
+36,Sorghum,en,90,true
+37,Spring Onions,en,142,true
+38,Sweet Potatoes,en,98,true
+39,Tomatoes,en,64,true
+40,Wheat,en,90,true
+41,White Irish Potatoes,en,110,true

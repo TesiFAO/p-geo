@@ -136,9 +136,11 @@ VACUUM FULL ANALYZE data;
 -- Import data
 
 -- market
+COPY market FROM '/work/crowddata/markets_italy.csv' DELIMITER ',' CSV HEADER;
 COPY market FROM '/work/crowddata/markets_kenya.csv' DELIMITER ',' CSV HEADER;
 COPY market FROM '/work/crowddata/markets_bangladesh.csv' DELIMITER ',' CSV HEADER;
-COPY market FROM '/work/crowddata/italy.csv' DELIMITER ',' CSV HEADER;
+-- COPY market FROM '/work/crowddata/markets_yemen.csv' DELIMITER ',' CSV HEADER;
+COPY market FROM '/work/crowddata/markets_somalia.csv' DELIMITER ',' CSV HEADER;
 UPDATE market SET geo = ST_GeomFromText('POINT(' || lon || ' ' || lat || ')',4326);
 
 -- commodity

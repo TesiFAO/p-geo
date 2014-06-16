@@ -1,4 +1,5 @@
 import json
+import os
 
 
 class Config:
@@ -12,8 +13,9 @@ class Config:
 
         self.filename = filename
         # TODO fix the problem about the path
-        json_data = open('../config/' + self.filename + '.json').read()
-        # json_data = open('../../config/' + self.filename + '.json').read()
+        # json_data = open('../config/' + self.filename + '.json').read()
+        path = os.path.join('../config/')
+        json_data = open(path + self.filename + '.json').read()
         # json_data = open(self.filename + '.json').read()
         self.config = json.loads(json_data)
 

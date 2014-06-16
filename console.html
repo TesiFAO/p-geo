@@ -1,0 +1,300 @@
+<html>
+    <head>
+        <title>Threads Console</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <script type='text/javascript' src='http://code.jquery.com/jquery-1.10.1.min.js'></script>
+        <script type='text/javascript' src='http://netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js'></script>
+        <link href='http://netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css' rel='stylesheet'>
+        <link href='http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' rel='stylesheet'>
+        <script type='text/javascript'>
+            var timers = {}
+            function downloadLayer(layerName, id) {
+                $.ajax({
+                    url         :   'http://127.0.0.1:5000/start/MODIS/' + layerName,
+                    type        :   'GET',
+                    dataType    :   'json',
+                    success: function (response) {
+                        updateProgress(id, response.key);
+                        $('#kill-' + id).click(function() {
+                            killThread(response.key);
+                        });
+                    },
+                    error: function (a, b, c) {
+                        console.log(a);
+                        console.log(b);
+                        console.log(c);
+                    }
+                });
+            }
+            function updateProgress(id, key) {
+                timers[key] = setTimeout(function() {
+                    $.ajax({
+                        url         :   'http://127.0.0.1:5000/progress/' + key,
+                        type        :   'GET',
+                        dataType    :   'json',
+                        success: function (response) {
+                            $('#' + id).prop('aria-valuenow', response.percent);
+                            $('#' + id).css('width', response.percent + '%');
+                            document.getElementById(id).innerHTML = response.percent + '%';
+                            if (response.percent == 100) {
+                                window.clearTimeout(timers[key]);
+                                $('#' + id).attr('class', 'progress-bar progress-bar-success');
+                                document.getElementById(id).innerHTML = 'Download Complete';
+                            } else {
+                                updateProgress(id, key);
+                            }
+                        },
+                        error: function (a, b, c) {
+                            console.log(a);
+                            console.log(b);
+                            console.log(c);
+                        }
+                    });
+                }, 2000);
+            }
+            function killThread(key) {
+                $.ajax({
+                    url         :   'http://127.0.0.1:5000/kill/' + key,
+                    type        :   'GET',
+                    dataType    :   'json',
+                    success: function (response) {
+                        window.clearTimeout(timers[key]);
+                    },
+                    error: function (a, b, c) {
+                        console.log(a);
+                        console.log(b);
+                        console.log(c);
+                    }
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='page-header'>
+                <h1>
+                    <i class='fa fa-sitemap'></i> Thread Console Example
+                </h1>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>
+                    <div class='progress' style='height: 35px;'>
+                        <div id='progress-bar-1' class='progress-bar' role='progressbar' aria-valuenow='00' aria-valuemin='0' aria-valuemax='100' style='width: 0%;'>
+                            0%
+                        </div>
+                    </div>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button style='width: 100%;' type='button' class='btn btn-info' onclick='downloadLayer("MOD13Q1.A2014001.h18v04.005.2014018103601.hdf", "progress-bar-1");'>
+                        <i class='fa fa-download'></i> Download Layer 1
+                    </button>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button id='kill-progress-bar-1' style='width: 100%;' type='button' class='btn btn-danger'>
+                        <i class='fa fa-exclamation-triangle'></i> Kill Thread 1
+                    </button>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>
+                    <div class='progress' style='height: 35px;'>
+                        <div id='progress-bar-2' class='progress-bar' role='progressbar' aria-valuenow='00' aria-valuemin='0' aria-valuemax='100' style='width: 0%;'>
+                            0%
+                        </div>
+                    </div>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button style='width: 100%;' type='button' class='btn btn-info' onclick='downloadLayer("MOD13Q1.A2014001.h18v05.005.2014018091912.hdf", "progress-bar-2");'>
+                        <i class='fa fa-download'></i> Download Layer 2
+                    </button>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button id='kill-progress-bar-2' style='width: 100%;' type='button' class='btn btn-danger'>
+                        <i class='fa fa-exclamation-triangle'></i> Kill Thread 2
+                    </button>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>
+                    <div class='progress' style='height: 35px;'>
+                        <div id='progress-bar-3' class='progress-bar' role='progressbar' aria-valuenow='00' aria-valuemin='0' aria-valuemax='100' style='width: 0%;'>
+                            0%
+                        </div>
+                    </div>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button style='width: 100%;' type='button' class='btn btn-info' onclick='downloadLayer("MOD13Q1.A2014001.h19v04.005.2014018124504.hdf", "progress-bar-3");'>
+                        <i class='fa fa-download'></i> Download Layer 3
+                    </button>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button id='kill-progress-bar-3' style='width: 100%;' type='button' class='btn btn-danger'>
+                        <i class='fa fa-exclamation-triangle'></i> Kill Thread 3
+                    </button>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>
+                    <div class='progress' style='height: 35px;'>
+                        <div id='progress-bar-4' class='progress-bar' role='progressbar' aria-valuenow='00' aria-valuemin='0' aria-valuemax='100' style='width: 0%;'>
+                            0%
+                        </div>
+                    </div>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button style='width: 100%;' type='button' class='btn btn-info' onclick='downloadLayer("MOD13Q1.A2014001.h19v05.005.2014018114348.hdf", "progress-bar-4");'>
+                        <i class='fa fa-download'></i> Download Layer 4
+                    </button>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button id='kill-progress-bar-4' style='width: 100%;' type='button' class='btn btn-danger'>
+                        <i class='fa fa-exclamation-triangle'></i> Kill Thread 4
+                    </button>
+                </div>
+            </div>
+            <div class='page-header'>
+                <h1>
+                    <i class='fa fa-sitemap'></i> Yemen
+                </h1>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>
+                    <div class='progress' style='height: 35px;'>
+                        <div id='progress-bar-5' class='progress-bar' role='progressbar' aria-valuenow='00' aria-valuemin='0' aria-valuemax='100' style='width: 0%;'>
+                            0%
+                        </div>
+                    </div>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button style='width: 100%;' type='button' class='btn btn-info' onclick='downloadLayer("MOD13Q1.A2014001.h22v07.005.2014018091653.hdf", "progress-bar-5");'>
+                        <i class='fa fa-download'></i> Download Yemen 1
+                    </button>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button id='kill-progress-bar-5' style='width: 100%;' type='button' class='btn btn-danger'>
+                        <i class='fa fa-exclamation-triangle'></i> Kill Thread 5
+                    </button>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>
+                    <div class='progress' style='height: 35px;'>
+                        <div id='progress-bar-6' class='progress-bar' role='progressbar' aria-valuenow='00' aria-valuemin='0' aria-valuemax='100' style='width: 0%;'>
+                            0%
+                        </div>
+                    </div>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button style='width: 100%;' type='button' class='btn btn-info' onclick='downloadLayer("MOD13Q1.A2014001.h23v07.005.2014018111439.hdf", "progress-bar-6");'>
+                        <i class='fa fa-download'></i> Download Yemen 2
+                    </button>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button id='kill-progress-bar-6' style='width: 100%;' type='button' class='btn btn-danger'>
+                        <i class='fa fa-exclamation-triangle'></i> Kill Thread 5
+                    </button>
+                </div>
+            </div>
+            <div class='page-header'>
+                <h1>
+                    <i class='fa fa-sitemap'></i> Somalia
+                </h1>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>
+                    <div class='progress' style='height: 35px;'>
+                        <div id='progress-bar-7' class='progress-bar' role='progressbar' aria-valuenow='00' aria-valuemin='0' aria-valuemax='100' style='width: 0%;'>
+                            0%
+                        </div>
+                    </div>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button style='width: 100%;' type='button' class='btn btn-info' onclick='downloadLayer("MOD13Q1.A2014001.h22v07.005.2014018091653.hdf", "progress-bar-7");'>
+                        <i class='fa fa-download'></i> Download Somalia 1
+                    </button>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button id='kill-progress-bar-7' style='width: 100%;' type='button' class='btn btn-danger'>
+                        <i class='fa fa-exclamation-triangle'></i> Stop Somalia 1
+                    </button>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>
+                    <div class='progress' style='height: 35px;'>
+                        <div id='progress-bar-8' class='progress-bar' role='progressbar' aria-valuenow='00' aria-valuemin='0' aria-valuemax='100' style='width: 0%;'>
+                            0%
+                        </div>
+                    </div>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button style='width: 100%;' type='button' class='btn btn-info' onclick='downloadLayer("MOD13Q1.A2014001.h22v08.005.2014018125939.hdf", "progress-bar-8");'>
+                        <i class='fa fa-download'></i> Download Somalia 2
+                    </button>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button id='kill-progress-bar-8' style='width: 100%;' type='button' class='btn btn-danger'>
+                        <i class='fa fa-exclamation-triangle'></i> Stop Somalia 2
+                    </button>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>
+                    <div class='progress' style='height: 35px;'>
+                        <div id='progress-bar-9' class='progress-bar' role='progressbar' aria-valuenow='00' aria-valuemin='0' aria-valuemax='100' style='width: 0%;'>
+                            0%
+                        </div>
+                    </div>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button style='width: 100%;' type='button' class='btn btn-info' onclick='downloadLayer("MOD13Q1.A2014001.h22v09.005.2014018094104.hdf", "progress-bar-9");'>
+                        <i class='fa fa-download'></i> Download Somalia 3
+                    </button>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button id='kill-progress-bar-9' style='width: 100%;' type='button' class='btn btn-danger'>
+                        <i class='fa fa-exclamation-triangle'></i> Stop Somalia 3
+                    </button>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>
+                    <div class='progress' style='height: 35px;'>
+                        <div id='progress-bar-10' class='progress-bar' role='progressbar' aria-valuenow='00' aria-valuemin='0' aria-valuemax='100' style='width: 0%;'>
+                            0%
+                        </div>
+                    </div>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button style='width: 100%;' type='button' class='btn btn-info' onclick='downloadLayer("MOD13Q1.A2014001.h23v07.005.2014018111439.hdf", "progress-bar-10");'>
+                        <i class='fa fa-download'></i> Download Somalia 4
+                    </button>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button id='kill-progress-bar-10' style='width: 100%;' type='button' class='btn btn-danger'>
+                        <i class='fa fa-exclamation-triangle'></i> Stop Somalia 4
+                    </button>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>
+                    <div class='progress' style='height: 35px;'>
+                        <div id='progress-bar-11' class='progress-bar' role='progressbar' aria-valuenow='00' aria-valuemin='0' aria-valuemax='100' style='width: 0%;'>
+                            0%
+                        </div>
+                    </div>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button style='width: 100%;' type='button' class='btn btn-info' onclick='downloadLayer("MOD13Q1.A2014001.h23v08.005.2014018090355.hdf", "progress-bar-11");'>
+                        <i class='fa fa-download'></i> Download Somalia 5
+                    </button>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <button id='kill-progress-bar-11' style='width: 100%;' type='button' class='btn btn-danger'>
+                        <i class='fa fa-exclamation-triangle'></i> Stop Somalia 5
+                    </button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

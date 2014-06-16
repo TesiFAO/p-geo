@@ -19,8 +19,17 @@ class Config:
         # json_data = open(self.filename + '.json').read()
         self.config = json.loads(json_data)
 
+    def __init__(self, filename, path_to_file=""):
+        """
+        Initialize the class with the filename of a JSON stored in the config directory.
+        @param filename: Name of the JSON file stored in the config lib to be read
+        """
+        self.filename = filename
+        path = os.path.join('../config/' + path_to_file)
+        json_data = open(path + self.filename + '.json').read()
+        self.config = json.loads(json_data)
+
     def get(self, property):
-        
         """
         Read a property of the JSON file stored in the config directory and set in the constructor.
         @param property: Name of the JSON key to access the property

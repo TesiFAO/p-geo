@@ -43,6 +43,20 @@ def listDays(sourceName, productName, year):
     ftp.quit()
     return Response(json.dumps(l), content_type = 'application/json; charset=utf-8')
 
+@app.route('/list/<sourceName>/<productName>/<year>/<day>')
+@cross_origin(origins='*')
+def listLayers(sourceName, productName, year, day):
+    config = c.Config(sourceName)
+    ftp = FTP(config.get('ftp'))
+    ftp.login()
+    ftp.cwd(config.get('ftp_dir'))
+    ftp.cwd(productName)
+    ftp.cwd(year)
+    ftp.cwd(day)
+    l = ftp.nlst()
+    ftp.quit()
+    return Response(json.dumps(l), content_type = 'application/json; charset=utf-8')
+
 
 if __name__ == '__main__':
     app.run(port = 5001, debug = True)

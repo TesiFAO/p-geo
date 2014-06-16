@@ -170,12 +170,45 @@ var CONSOLE = (function() {
         });
     };
 
+    function download() {
+
+        var url = CONFIG[$('#source-list').val()].url_list + '/' + $('#product-list').val() + '/' + $('#from-year-list').val() + '/' + $('#from-day-list').val();
+        url = 'http://127.0.0.1:5001/list/MODIS/MOD13Q1/2014/065';
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (r) {
+                for (var i = 0 ; i < r.length ; i++)
+                    singleDownload(r[i]);
+            },
+            error: function (a, b, c) {
+                console.log(a);
+                console.log(b);
+                console.log(c);
+            }
+        });
+
+    };
+
+    function singleDownload(layerName) {
+        $.get('templates.html', function (templates) {
+            var view = {
+                layerName: layerName
+            };
+            var template = $(templates).filter('#thread-template').html();
+            $('#threads-list').append(Mustache.render(template, view));
+        });
+    };
+
     return {
-        CONFIG : CONFIG,
-        init : init,
+        CONFIG          :   CONFIG,
+        init            :   init,
         downloadLayer   :   downloadLayer,
         updateProgress  :   updateProgress,
-        killThread  :   killThread
+        killThread      :   killThread,
+        download        :   download
     };
 
 })();

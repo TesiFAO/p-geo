@@ -20,6 +20,7 @@ class Config:
         self.config = json.loads(json_data)
 
     def get(self, property):
+        
         """
         Read a property of the JSON file stored in the config directory and set in the constructor.
         @param property: Name of the JSON key to access the property

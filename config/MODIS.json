@@ -3,10 +3,17 @@
     "ftp"           :   "ladsweb.nascom.nasa.gov",
     "ftp_dir"       :   "/allData/5/",
     "ip"            :   "127.0.0.1",
-    "targetDir"     :   "/home/kalimaha/Desktop/MODIS",
+    "targetDir"     :   "/home/kalimaha/Development/GIS/MODIS",
     "port"          :   1234,
     "threads"       :   8,
     "debug"         :   true,
+    "products"      :   {
+        "MOD13Q1"   :   {
+            "title" : {
+                "EN"    :   "250m"
+            }
+        }
+    },
     "bands"         : {
         "NDVI"  :   "0",
         "EVI"   :   "1"

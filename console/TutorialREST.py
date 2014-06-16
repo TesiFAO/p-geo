@@ -10,7 +10,7 @@ import TutorialThread
 app = Flask(__name__)
 map_key = 'FENIX'
 
-def crossdomain(origin=None, methods=None, headers=None, max_age=21600, attach_to_all=True, automatic_options=True):
+def crossdomain(origin = None, methods = None, headers = None, max_age = 21600, attach_to_all = True, automatic_options = True):
     """
         Taken from the Flask web-site:
         <a href='http://flask.pocoo.org/snippets/56/'>http://flask.pocoo.org/snippets/56/</a>
@@ -85,4 +85,4 @@ def process_progress(key):
     return jsonify(key = key, percent = percent_done, done = done)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port = 5000, debug = True)

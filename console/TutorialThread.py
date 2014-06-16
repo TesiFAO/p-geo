@@ -1,5 +1,6 @@
 from threading import Thread
 from ftplib import FTP
+from utils import config
 import os
 
 class TutorialThread(Thread):
@@ -15,8 +16,9 @@ class TutorialThread(Thread):
 
         self.sourceName = sourceName
         self.layerName = layerName
+        self.config = config.Config(self.sourceName)
 
-        ftp = FTP('ladsweb.nascom.nasa.gov')
+        ftp = FTP(self.config.get('ftp'))
         ftp.login()
         ftp.cwd('/allData/5/MOD13Q1/2014/001/')
         ftp.sendcmd('TYPE i')
@@ -25,11 +27,11 @@ class TutorialThread(Thread):
 
     def run(self):
 
-        ftp = FTP('ladsweb.nascom.nasa.gov')
+        ftp = FTP(self.config.get('ftp'))
         ftp.login()
         ftp.cwd('/allData/5/MOD13Q1/2014/001/')
         file = self.layerName
-        local_file = os.path.join('/home/kalimaha/Desktop', file)
+        local_file = os.path.join(self.config.get('targetDir'), file)
 
         with open(local_file, 'w') as f:
             def callback(chunk):

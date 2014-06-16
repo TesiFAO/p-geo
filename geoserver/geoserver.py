@@ -68,6 +68,7 @@ class Geoserver():
         #cmd = "curl -u '"+ self.config.get('username') +":" + self.config.get('password') + "' -XPUT -H 'Content-type:image/tiff' -T "+ input_raster + " " + self.config.get('geoserver_master') +"/workspaces/"+ workspace +"/coveragestores/"+ name +"/file.geotiff"
         return "published"
     '''
+    #  TODO: check if the world image works!
     def publish_coveragestore(self, name, data, workspace=None, overwrite=False ):
         if not overwrite:
             try:
@@ -125,13 +126,13 @@ class Geoserver():
                  self.logger.error('call nlink(archive) : ' + archive)
                 #nlink(archive)
 
-    def delete_coveragestore(self, name, workspace=None,purge=True, recurse=True):
+    def delete_coveragestore(self, layername, workspace=None,purge=True, recurse=True):
         if workspace is None:
             workspace = self.get_default_workspace()
 
         # TODO: it makes two, calls, so probably it's better just handle the delete code
-        if self.check_if_coverage_exist(name):
-            cs_url = url(self.service_url, ["workspaces", workspace, "coveragestores", name])
+        if self.check_if_coverage_exist(layername):
+            cs_url = url(self.service_url, ["workspaces", workspace, "coveragestores", layername])
             self.logger.info(cs_url);
             #headers, response = self.http.request(cs_url, "DELETE")
 
@@ -274,10 +275,10 @@ class Geoserver():
             return d
         return False
 
-    def reload_configuration_geoserver_slaves(self):
+    def reload_configuration_geoserver_slaves(self, force_master_reload=False):
         geoserver_cluster = self.config.get("geoserver_slaves")
+        if (force_master_reload is True): geoserver_cluster.append(self.config.get("geoserver_master"))
         for geoserver in geoserver_cluster:
-            print geoserver
             cs_url =  url(geoserver, ["reload?recurse=true"])
             headers, response = self.http.request(cs_url, "POST")
             self.logger.info(headers)

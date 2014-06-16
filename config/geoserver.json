@@ -14,7 +14,7 @@
         {
             "datastore" : "fenixSpatialDB",
             "workspace" : "fenix",
-            "host" : "localhost",
+            "host" : "faostat3.fao.org",
             "port" : "5432",
             "username" : "username",
             "password" : "password",

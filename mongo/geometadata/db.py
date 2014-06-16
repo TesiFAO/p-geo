@@ -21,14 +21,20 @@ document_layer = config.get('database').get('document').get('layer')
 document_stats = config.get('database').get('document').get('stats')
 
 """
-Insert Layer Metadata in tmongodb
+Insert Layer Metadata in mongodb
 @param json: json data
 @return: id
 """
 def insertMetadata(json):
-     id = mongo_commons.insert(client, database, document_layer, json)
-     if ( id is not None ): print "Data Inserted", id
-     return id
+    return mongo_commons.insert(client, database, document_layer, json)
+
+"""
+Delete Layer Metadata in mongodb
+@param json: json data
+@return: id
+"""
+def removeMetadata(json):
+    return mongo_commons.remove(client, database, document_layer, json)
 
 
 """

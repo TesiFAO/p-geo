@@ -104,11 +104,11 @@ def crop_raster_by_vector(input_raster, input_polygon):
     return output_file
 
 def crop_raster_by_vector_postgis(input_raster, table, query=None, s_srs='EPSG:4326', t_srs='EPSG:4326', datastore=None, srsnodata=None, dstnodata='nodata'):
-    #gdalwarp -cutline "PG:dbname=fenixspatial user=fenix password=Qwaszx" -csql 'select * from g2008_4326 where adm0_code=1' -crop_to_cutline -of GTiff -s_srs EPSG:4326 -t_srs EPSG:4326 3B42RT.2014012000.7.1day.tif 3B42RT.2014012000.7.1day_cut.ti
+    # TODO: gdalwarp -cutline "PG:host=faostat3.fao.org port=5432 dbname=fenix-spatial user=fenix password=Qwaszx" -csql 'select * from gaul0_3857 where adm0_code=226' -crop_to_cutline -of GTiff -s_srs EPSG:4326 -t_srs EPSG:4326 -dstnodata nodata AB_NDVI_4326.tif somalia3.tif
     output_file =  filesystem.tmp_filename('output_', '.tif')
     # get db connectin string from configfile (geoserver.json default datastore?)
     # TODO:handle connection to db
-    db_connection_string = "PG:dbname=fenixspatial user=fenix password=Qwaszx"
+    db_connection_string = "Host:faostat3.fao.org PG:dbname=fenixspatial user=fenix password=Qwaszx"
     # TODO:handle nodata
     cmd = 'gdalwarp -q -multi -of GTiff -cutline "'+ db_connection_string +'" -csql "'+ query +'" -s_srs '+ s_srs + ' -t_srs '+ t_srs +' -crop_to_cutline ' + input_raster + ' ' + output_file
     logger.info('crop_raster_by_vector_postgis: ' + cmd)

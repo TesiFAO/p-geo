@@ -18,10 +18,26 @@ Insert json data to the mongo db
 def insert(client, database, collection, data):
     try:
         id =  client[database][collection].insert(data)
-        print "Data Inserted", id
         return id
     except Exception, e:
         print "Insert ERROR ", e
+        return None
+
+
+"""
+DElete json data to the mongo db
+@param client client used to connect to mongo
+@param database
+@param collection
+@param data json to be inserted
+@return: id
+"""
+def remove(client, database, collection, data):
+    try:
+        id =  client[database][collection].remove(data)
+        return id
+    except Exception, e:
+        print "Delete ERROR ", e
         return None
 
 

@@ -24,7 +24,7 @@ class Geoserver():
         self.logger = log.Logger()
 
         # use as parameters
-        service_url = self.config.get('resturl');
+        service_url = self.config.get('geoserver_master');
         username = self.config.get('username')
         password = self.config.get('password')
 
@@ -54,7 +54,7 @@ class Geoserver():
     def get(self, property):
         """
         "wmsurl"  : "http://localhost:9090/geoserver/wms" //used for wms request
-        "resturl" : "http://localhost:9090/geoserver"     //used for rest request
+        "geoserver_master" : "http://localhost:9090/geoserver"     //used for rest request
         "datadir" : "/home/vortex/programs/tomcat_geoservers/data/" //datadir used to get the raster data
         "username" : "admin",
         "password" : "geoserver",
@@ -65,7 +65,7 @@ class Geoserver():
 
     '''def publish_raster(self, input_raster, name, layertype='GEOTIFF', workspace='fenix', metadata=''):
         self.logger.info('raster: ' + input_raster)
-        #cmd = "curl -u '"+ self.config.get('username') +":" + self.config.get('password') + "' -XPUT -H 'Content-type:image/tiff' -T "+ input_raster + " " + self.config.get('resturl') +"/workspaces/"+ workspace +"/coveragestores/"+ name +"/file.geotiff"
+        #cmd = "curl -u '"+ self.config.get('username') +":" + self.config.get('password') + "' -XPUT -H 'Content-type:image/tiff' -T "+ input_raster + " " + self.config.get('geoserver_master') +"/workspaces/"+ workspace +"/coveragestores/"+ name +"/file.geotiff"
         return "published"
     '''
     def publish_coveragestore(self, name, data, workspace=None, overwrite=False ):
@@ -275,7 +275,7 @@ class Geoserver():
         return False
 
     def reload_configuration_geoserver_slaves(self):
-        geoserver_cluster = self.config.get("geoserver_cluster")
+        geoserver_cluster = self.config.get("geoserver_slaves")
         for geoserver in geoserver_cluster:
             print geoserver
             cs_url =  url(geoserver, ["reload?recurse=true"])

@@ -2,30 +2,102 @@ var CONSOLE = (function() {
 
     var CONFIG = {
         MODIS   :   {
-            url_products    :   'http://127.0.0.1:5001/list/MODIS'
+            url_list    :   'http://127.0.0.1:5001/list/MODIS'
         }
     };
 
     var timers = {};
 
     function init() {
-        $('#source-list').chosen({disable_search_threshold: 10});
+        $('#source-list').chosen({disable_search_threshold: 10, allow_single_deselect: true});
         $('#product-list').chosen({disable_search_threshold: 10});
-        $('#from-list').chosen({disable_search_threshold: 10});
-        $('#to-list').chosen({disable_search_threshold: 10});
+        $('#from-year-list').chosen({disable_search_threshold: 10});
+        $('#from-day-list').chosen({disable_search_threshold: 10});
+        $('#to-year-list').chosen({disable_search_threshold: 10});
+        $('#to-day-list').chosen({disable_search_threshold: 10});
         $('#source-list').on('change', function() {
+            try {
+                $.ajax({
+                    url: CONFIG[$('#source-list').val()].url_list,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (response) {
+                        $('#product-list').empty();
+                        var s = '';
+                        s += '<option>Please Select...</option>';
+                        for (var i = 0; i < response.length; i++)
+                            s += '<option>' + response[i] + '</option>';
+                        $('#product-list').append(s);
+                        $('#product-list').trigger('chosen:updated');
+                    },
+                    error: function (a, b, c) {
+                        console.log(a);
+                        console.log(b);
+                        console.log(c);
+                    }
+                });
+            } catch(e) {
+                console.log(e);
+            }
+        });
+        $('#product-list').on('change', function() {
             $.ajax({
-                url         :   CONFIG[$('#source-list').val()].url_products,
+                url         :   CONFIG[$('#source-list').val()].url_list + '/' + $('#product-list').val(),
                 type        :   'GET',
                 dataType    :   'json',
                 success: function (response) {
-                    $('#product-list').empty();
-                    $('#product-list').append('<option>Please select...</option>');
+                    $('#from-year-list').empty();
+                    $('#to-year-list').empty();
                     var s = '';
+                    s += '<option>Please Select...</option>';
                     for (var i = 0 ; i < response.length ; i++)
                         s += '<option>' + response[i] + '</option>';
-                    $('#product-list').append(s);
-                    $('#product-list').trigger('chosen:updated');
+                    $('#from-year-list').append(s);
+                    $('#to-year-list').append(s);
+                    $('#from-year-list').trigger('chosen:updated');
+                    $('#to-year-list').trigger('chosen:updated');
+                },
+                error: function (a, b, c) {
+                    console.log(a);
+                    console.log(b);
+                    console.log(c);
+                }
+            });
+        });
+        $('#from-year-list').on('change', function() {
+            $.ajax({
+                url         :   CONFIG[$('#source-list').val()].url_list + '/' + $('#product-list').val() + '/' + $('#from-year-list').val(),
+                type        :   'GET',
+                dataType    :   'json',
+                success: function (response) {
+                    $('#from-day-list').empty();
+                    var s = '';
+                    s += '<option>Please Select...</option>';
+                    for (var i = 0 ; i < response.length ; i++)
+                        s += '<option>' + response[i] + '</option>';
+                    $('#from-day-list').append(s);
+                    $('#from-day-list').trigger('chosen:updated');
+                },
+                error: function (a, b, c) {
+                    console.log(a);
+                    console.log(b);
+                    console.log(c);
+                }
+            });
+        });
+        $('#to-year-list').on('change', function() {
+            $.ajax({
+                url         :   CONFIG[$('#source-list').val()].url_list + '/' + $('#product-list').val() + '/' + $('#to-year-list').val(),
+                type        :   'GET',
+                dataType    :   'json',
+                success: function (response) {
+                    $('#to-day-list').empty();
+                    var s = '';
+                    s += '<option>Please Select...</option>';
+                    for (var i = 0 ; i < response.length ; i++)
+                        s += '<option>' + response[i] + '</option>';
+                    $('#to-day-list').append(s);
+                    $('#to-day-list').trigger('chosen:updated');
                 },
                 error: function (a, b, c) {
                     console.log(a);

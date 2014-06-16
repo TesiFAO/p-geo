@@ -8,9 +8,8 @@ from console import console_processes
 import TutorialThread
 
 app = Flask(__name__)
-map_key = 'FENIX'
 
-def crossdomain(origin = None, methods = None, headers = None, max_age = 21600, attach_to_all = True, automatic_options = True):
+def crossdomain(origin=None, methods=None, headers=None, max_age=21600, attach_to_all=True, automatic_options=True):
     """
         Taken from the Flask web-site:
         <a href='http://flask.pocoo.org/snippets/56/'>http://flask.pocoo.org/snippets/56/</a>
@@ -53,9 +52,9 @@ def process_start(sourceName, layerName):
     fjp = TutorialThread.TutorialThread(sourceName, layerName)
     fjp.start()
     key = str(uuid4())
-    if not map_key in console_processes:
-        console_processes[map_key] = {};
-    console_processes[map_key][key] = fjp
+    if not 'pippo' in console_processes:
+        console_processes['pippo'] = {};
+    console_processes['pippo'][key] = fjp
     percent_done = round(fjp.percent_done(), 1)
     done = False
     return jsonify(key = key, percent = percent_done, done = done)
@@ -63,26 +62,26 @@ def process_start(sourceName, layerName):
 @app.route('/kill/<key>')
 @crossdomain(origin='*')
 def kill(key):
-    percent_done = console_processes[map_key][key].percent_done()
-    del console_processes[map_key][key]
+    percent_done = console_processes['pippo'][key].percent_done()
+    del console_processes['pippo'][key]
     done = True
     percent_done = round(percent_done, 1)
-    return jsonify(key = key, percent = percent_done, done = done)
+    return jsonify(key=key, percent=percent_done, done=done)
 
 @app.route('/progress/<key>')
 @crossdomain(origin='*')
 def process_progress(key):
-    if not map_key in console_processes:
-        console_processes[map_key] = {}
-    if not key in console_processes[map_key]:
-        return jsonify(error = 'Invalid process key.')
-    percent_done = console_processes[map_key][key].percent_done()
+    if not 'pippo' in console_processes:
+        console_processes['pippo'] = {}
+    if not key in console_processes['pippo']:
+        return jsonify(error='Invalid process key.')
+    percent_done = console_processes['pippo'][key].percent_done()
     done = False
-    if not console_processes[map_key][key].is_alive() or percent_done == 100.0:
-        del console_processes[map_key][key]
+    if not console_processes['pippo'][key].is_alive() or percent_done == 100.0:
+        del console_processes['pippo'][key]
         done = True
     percent_done = round(percent_done, 1)
-    return jsonify(key = key, percent = percent_done, done = done)
+    return jsonify(key=key, percent=percent_done, done=done)
 
 if __name__ == '__main__':
-    app.run(port = 5000, debug = True)
+    app.run(debug=True)

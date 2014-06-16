@@ -24,37 +24,72 @@
                 </h1>
             </div>
             <div class='row'>
-                <div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>
-                    <select style='width: 100%;' id='source-list'>
-                        <option selected>Please Select a Product...</option>
-                        <option>MODIS</option>
-                        <option>TRMM</option>
-                    </select>
-                </div>
-                <div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>
-                    <select style='width: 100%;' id='product-list'>
-
-                    </select>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <div>
+                        <label for='source-list'>Source</label>
+                        <select style='width: 100%;' id='source-list' data-placeholder='Please select a source...'>
+                            <option>Please Select...</option>
+                            <option>MODIS</option>
+                            <option>TRMM</option>
+                        </select>
+                    </div>
                 </div>
                 <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
-                    <select style='width: 100%;' id='from-list'>
+                    <div>
+                        <label for='product-list'>Product</label>
+                        <select style='width: 100%;' id='product-list' data-placeholder='Please select a product...'>
 
-                    </select>
+                        </select>
+                    </div>
                 </div>
                 <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
-                    <select style='width: 100%;' id='to-list'>
+                    <div>
+                        <label for='from-year-list'>From: Year</label>
+                        <select style='width: 100%;' id='from-year-list'>
 
-                    </select>
+                        </select>
+                    </div>
                 </div>
                 <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
-                    <button style='width: 100%;' type='button' class='btn btn-info'>
+                    <div>
+                        <label for='from-day-list'>From: Day</label>
+                        <select style='width: 100%;' id='from-day-list'>
+
+                        </select>
+                    </div>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <day>
+                        <label for='to-year-list'>To: Year</label>
+                        <select style='width: 100%;' id='to-year-list'>
+
+                        </select>
+                    </day>
+                </div>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    <div>
+                        <label for='to-day-list'>To: Day</label>
+                        <select style='width: 100%;' id='to-day-list'>
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>
+                    <button style='width: 100%; margin-top: 16px;' type='button' class='btn btn-danger'>
+                        <i class='fa fa-exclamation-triangle'></i> Reset
+                    </button>
+                </div>
+                <div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>
+                    <button style='width: 100%; margin-top: 16px;' type='button' class='btn btn-info'>
                         <i class='fa fa-download'></i> Download
                     </button>
                 </div>
             </div>
             <div class='page-header'>
                 <h1>
-                    <i class='fa fa-sitemap'></i> Yemen
+                    <i class='fa fa-sitemap'></i> List of Threads
                 </h1>
             </div>
             <div class='row'>

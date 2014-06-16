@@ -1,13 +1,14 @@
 {
-    "wmsurl"  : "http://localhost:9090/geoserver/wms",
-    "resturl" : "http://localhost:9091/geoserver/rest",
-    "geoserver_cluster" : ["http://localhost:9092/geoserver/rest"],
+    "resturl" : "http://hqlprfenixapp2.hq.un.fao.org:11100/geoserver/rest",
+    "geoserver_cluster" : ["http://hqlprfenixapp2.hq.un.fao.org:11200/geoserver/rest"],
+
+    "geoserver_master" : "http://hqlprfenixapp2.hq.un.fao.org:11100/geoserver/rest",
+    "geoserver_slaves" : ["http://hqlprfenixapp2.hq.un.fao.org:11200/geoserver/rest"],
 
     "datadir" : "/home/vortex/programs/tomcat_geoservers/data/",
-    "username" : "admin",
-    "password" : "geoserver",
-    "default_workspace" : "fenix",
-    "debug" : true,
+    "username" : "fenix",
+    "password" : "Fenix2014",
+    "default_workspace" : "test",
     "default_datastore" : "fenixSpatialDB",
     "datastores": [
         {
@@ -19,5 +20,6 @@
             "password" : "password",
             "dbname" : "fenix-spatial"
         }
-    ]
+    ],
+    "debug" : true
 }

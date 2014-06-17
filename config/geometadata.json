@@ -7,8 +7,7 @@
         "connection" : "mongodb://exldvsdmxreg1.ext.fao.org:27017/",
         "db" : "geometadata",
         "document" : {
-            "layer" : "layer",
-            "stats" : "stats"
+            "layer" : "layer"
         }
     }
 }

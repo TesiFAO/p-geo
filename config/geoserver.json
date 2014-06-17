@@ -6,6 +6,7 @@
     "geoserver_slaves" : ["http://hqlprfenixapp2.hq.un.fao.org:11200/geoserver/rest"],
 
     "datadir" : "/home/vortex/programs/tomcat_geoservers/data/",
+
     "username" : "fenix",
     "password" : "Fenix2014",
     "default_workspace" : "test",

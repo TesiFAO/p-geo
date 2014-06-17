@@ -1,0 +1,28 @@
+{
+    "id"        :   "geostats",
+    "ip"        :   "168.202.28.214",
+    "port"      :   10800,
+    "debug"     :   true,
+
+    "datadir" : "/home/vortex/Desktop/LAYERS/",
+
+    "geostats_datastore"  :   {
+        "connection" : "mongodb://exldvsdmxreg1.ext.fao.org:27017/",
+        "db" : "geostats",
+        "document" : {
+            "stats" : "geostats"
+        }
+    },
+
+    "default_datastore" : "fenix",
+    "spatial_datastores": [
+        {
+            "datastore" : "fenix",
+            "host" : "faostat3.fao.org",
+            "port" : "5432",
+            "username" : "fenix",
+            "password" : "Qwaszx",
+            "dbname" : "fenix-spatial"
+        }
+    ]
+}

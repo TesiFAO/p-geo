@@ -84,7 +84,7 @@ def tmp_filename(prefix='', extension=''):
 def create_tmp_file(string_value, prefix='', extension=''):
     filename = tmp_filename(prefix, extension)
     text_file = open(filename, "w")
-    text_file.write(string_value)
+    text_file.write(str(string_value))
     text_file.close()
     return filename
 

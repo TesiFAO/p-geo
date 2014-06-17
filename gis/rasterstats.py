@@ -64,7 +64,7 @@ def get_raster_statistics(input_raster, force=True):
         stats.append({"min":s[0],"max":s[1],"mean":s[2],"stddev":s[3]})
     return stats
 
-def get_zonalstatics_by_json(input_raster, json, force=True):
+def get_zonalstatics_by_json(input_raster, json, force=True, dstnodata="nodata" ):
     print json
     print '-------------  '
     json_file = filesystem.create_tmp_file(json, 'json_', '.json')
@@ -80,7 +80,7 @@ def get_zonalstatics_by_json(input_raster, json, force=True):
         # create a tmp shapefile
         feature_shp_file = vector.create_shp_from_feature(feature)
         # create a tmp raster
-        raster_file = crop_raster_by_vector(input_raster, feature_shp_file )
+        raster_file = crop_raster_by_vector(input_raster, feature_shp_file, dstnodata )
         # do statistics on the new raster
         stat = get_raster_statistics(raster_file, force)
         # calculate histogram
@@ -89,32 +89,24 @@ def get_zonalstatics_by_json(input_raster, json, force=True):
         # check next feature
         feature = lyr.GetNextFeature()
         i+=1
+
+        # remove tmp raster file
+        filesystem.remove(raster_file)
+
+        #TODO: how remove all files related to the shp?
+        #filesystem.remove(feature_shp_file.replace(".shp", ".*"))
+
+    # remove tmp json and shp files
+    filesystem.remove(json_file)
+    filesystem.remove(shp_file)
     return stats
 
 
-def crop_raster_by_vector(input_raster, input_polygon):
-    output_file =  filesystem.tmp_filename('output_', '.tif')
-    # crop layer by vector (using gdalwarp)
-    # TODO: handle nodata
-    #cmd = "gdalwarp -multi -of GTiff -cutline "+ input_polygon +" -crop_to_cutline " + input_raster + " " + outputfile + " -srcnodata 32767 -dstnodata 32767"
-    # how to get the dstnodata value?
-    # TODO: get the srs source file!!!
-    cmd = "gdalwarp -q -multi -dstnodata 0 -of GTiff -cutline "+ input_polygon +" -crop_to_cutline " + input_raster + " " + output_file
-    os.system(cmd)
-    return output_file
-
-def crop_raster_by_vector_postgis(input_raster, table, query=None, s_srs='EPSG:4326', t_srs='EPSG:4326', datastore=None, srsnodata=None, dstnodata='nodata'):
-    # TODO: gdalwarp -cutline "PG:host=faostat3.fao.org port=5432 dbname=fenix-spatial user=fenix password=Qwaszx" -csql 'select * from gaul0_3857 where adm0_code=226' -crop_to_cutline -of GTiff -s_srs -dstnodata nodata AB_NDVI_4326.tif somalia3.tif
-    output_file =  filesystem.tmp_filename('output_', '.tif')
-    # get db connectin string from configfile (geoserver.json default datastore?)
-    # TODO:handle connection to db
-    db_connection_string = "PG:host=faostat3.fao.org port=5432 dbname=fenix-spatial user=fenix password=Qwaszx"
-    # TODO:handle nodata
+def crop_raster_by_vector(input_raster, input_polygon, dstnodata="nodata"):
     # TODO: -wo NUM_THREADS=ALL_CPUS (to use all the CPUs)
     # TODO: subprocess.call is a better approach
-    # subprocess.call(['gdalwarp', '-t_srs ' + crs, '-dstnodata 0', '-q', '-cutline ' + mask, '-dstalpha', '-of GTIFF', input, output]).
-    cmd = 'gdalwarp -q -multi -of GTiff -cutline "'+ db_connection_string +'" -csql "'+ query +'" -dstnodata nodata -crop_to_cutline ' + input_raster + ' ' + output_file
-    logger.info('crop_raster_by_vector_postgis: ' + cmd)
+    output_file =  filesystem.tmp_filename('output_', '.tif')
+    cmd = "gdalwarp -q -multi -of GTiff -cutline " + input_polygon + " -dstnodata "+ dstnodata +" -crop_to_cutline " + input_raster + " " + output_file
     os.system(cmd)
     return output_file
 

@@ -1,4 +1,5 @@
 import sys
+import json
 
 try:
     from utils import config, log, filesystem
@@ -86,11 +87,12 @@ class GeoStats:
             self.layer_uid = self.layer["uid"]
 
         # layer_uid used in saving the statistics
-        self.layer_uid += "_" + self.geostats["name"]
+        # TODO: make a nicer "name"
+        if( "name" in self.geostats):
+            self.layer_uid += "_" + self.geostats["name"]
 
         # get statistics
         self._get_statistics()
-
 
 
     def stats_layer_filename(self, layer_filename, geostats):
@@ -114,9 +116,11 @@ class GeoStats:
     def _get_statistics(self):
         # TODO: a switch
         if ( "query" in self.geostats ):
-            self._get_stats_query(self.geostats['query'], self.geostats['code'])
+            self._get_stats_query(self.geostats['query'], self.geostats['code'], self.geostats['save_stats'])
         if ( "query_condition" in self.geostats ):
             self._get_stats_query_condition()
+        if ( "geojson" in self.geostats ):
+            self._get_stats_geojson()
 
         return None
 
@@ -158,7 +162,13 @@ class GeoStats:
             # TODO: problems with query Strings and Integers (or whatever)
             query = "SELECT * FROM " + from_query + " WHERE " + column_filter + " IN (" + str(r[0]) + ")"
             print query
-            stats = self._get_stats_query(query, str(r[0]), True)
+            stats = self._get_stats_query(query, str(r[0]),self.geostats['save_stats'])
+        return stats
+
+    def _get_stats_geojson(self):
+        stats = rasterstats.get_zonalstatics_by_json(self.layer_path, self.geostats["geojson"])
+        print stats
+        # remove tmp file
         return stats
 
     def get_stats(self, file_path, remove_file=False):
@@ -170,46 +180,3 @@ class GeoStats:
         if ( remove_file is True):
             filesystem.remove(file_path)
         return stats
-
-    def _save_stats(self, uid, code, stats):
-        db_geostats.insert_stats()
-
-layer = {
-    # the stored UID in the GeoMetadata database
-    "uid" : "MODIS:test",
-
-}
-
-geostats = {
-    "code" : "226",
-    "query": "SELECT * FROM gaul0_3857 WHERE adm0_code IN ('226') ",
-    "statistics" : "all",
-    "save_stats" : True
-
-}
-
-geostats = {
-    "query_condition" : {
-        "column_filter" : "adm1_code",
-        "select" : "distinct(adm1_code)",
-        "from"   : "gaul1_3857",
-        "where"  : "adm0_code IN ('226')"
-    },
-    "save_stats" : True
-}
-
-geostats = {
-    "name" : "gaul2",
-    "query_condition" : {
-        "column_filter" : "adm2_code",
-        "select" : "distinct(adm2_code)",
-        "from"   : "gaul2_3857",
-        "where"  : "adm0_code IN ('226')"
-    },
-    "save_stats" : True
-}
-
-
-
-gs = GeoStats()
-gs.stats_layer_json(layer, geostats)

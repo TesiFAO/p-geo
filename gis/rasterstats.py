@@ -118,6 +118,22 @@ def crop_raster_by_vector_postgis(input_raster, table, query=None, s_srs='EPSG:4
     os.system(cmd)
     return output_file
 
+
+def crop_raster_by_vector_postgis(input_raster, query=None, db_connection_string=None, dstnodata='nodata'):
+    # TODO: gdalwarp -cutline "PG:host=faostat3.fao.org port=5432 dbname=fenix-spatial user=fenix password=Qwaszx" -csql 'select * from gaul0_3857 where adm0_code=226' -crop_to_cutline -of GTiff -s_srs -dstnodata nodata AB_NDVI_4326.tif somalia3.tif
+    output_file =  filesystem.tmp_filename('output_', '.tif')
+    # get db connectin string from configfile (geoserver.json default datastore?)
+    # TODO:handle connection to db
+    # TODO:handle nodata
+    # TODO: -wo NUM_THREADS=ALL_CPUS (to use all the CPUs)
+    # TODO: subprocess.call is a better approach
+    # subprocess.call(['gdalwarp', '-t_srs ' + crs, '-dstnodata 0', '-q', '-cutline ' + mask, '-dstalpha', '-of GTIFF', input, output]).
+    cmd = 'gdalwarp -q -multi -of GTiff -cutline "'+ db_connection_string +'" -csql "'+ query +'" -dstnodata '+ dstnodata +' -crop_to_cutline ' + input_raster + ' ' + output_file
+    logger.info('crop_raster_by_vector_postgis: ' + cmd)
+    os.system(cmd)
+    return output_file
+
+
 def get_raster_statistics(input_raster, force=True):
     src_ds = gdal.Open(input_raster)
     stats = []
@@ -169,5 +185,5 @@ def cell_raster_value(raster, x, y, band=None):
 # a = crop_raster_by_vector_postgis('/home/vortex/Desktop/TRMM/3B42RT/2014/04/original/3B42RT.2014042000.7.1day.tif', 'g2008_4326', "select * from g2008_4326 where adm0_name='Italy'")
 # print a
 
-a = crop_raster_by_vector_postgis('/home/vortex/Desktop/LAYERS/MODIS/AB_NDVI_4326.tif', 'gaul0_3857', "select * from gaul0_3857 where adm0_code=269")
+#a = crop_raster_by_vector_postgis('/home/vortex/Desktop/LAYERS/MODIS/AB_NDVI_4326.tif', 'gaul0_3857', "select * from gaul0_3857 where adm0_code=269")
 

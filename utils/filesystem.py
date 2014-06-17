@@ -93,3 +93,7 @@ def unzip(filezip, prefix='', extension=''):
     with zipfile.ZipFile(filezip, "r") as z:
         z.extractall(path)
     return path
+
+def remove(file):
+    os.remove(file)
+

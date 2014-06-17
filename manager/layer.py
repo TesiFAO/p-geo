@@ -1,14 +1,10 @@
-from geoserver import geoserver
+from geoserver.geoserver import Geoserver
 from mongo.geometadata import db
 
 # GeoServer Instance
-g = geoserver.Geoserver()
+g = Geoserver()
 
 def publish_layer(layer, path):
-    # SWITCH between
-    # RASTER
-
-    # VECTOR
     return None
 
 def publish_coveragestore(layer, path, overwrite=False):
@@ -121,4 +117,4 @@ layer = {
 
 #g.reload_configuration_geoserver_slaves();
 
-#reload_geoservers()
+reload_geoservers()

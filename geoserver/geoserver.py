@@ -271,8 +271,8 @@ class Geoserver():
         print default_datastore
         datastore = self.config.get('datastores')
         for d in datastore:
-            self.logger.info(d['datastore'] == default_datastore)
-            return d
+            if (default_datastore in d['datastore']):
+                return d
         return False
 
     def reload_configuration_geoserver_slaves(self, force_master_reload=False):

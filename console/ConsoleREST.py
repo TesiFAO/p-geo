@@ -8,18 +8,20 @@ import TutorialThread
 
 app = Flask(__name__)
 
-@app.route('/start/<sourceName>/<product>/<year>/<day>/<layerName>')
+
+@app.route('/start/<source_name>/<product>/<year>/<day>/<layer_name>')
 @cross_origin(origins='*')
-def process_start(sourceName, product, year, day, layerName):
-    fjp = TutorialThread.TutorialThread(sourceName, product, year, day, layerName)
+def process_start(source_name, product, year, day, layer_name):
+    fjp = TutorialThread.TutorialThread(source_name, product, year, day, layer_name)
     fjp.start()
-    key = layerName
+    key = layer_name
     if not threads_map_key in console_processes:
-        console_processes[threads_map_key] = {};
+        console_processes[threads_map_key] = {}
     console_processes[threads_map_key][key] = fjp
     percent_done = round(fjp.percent_done(), 1)
     done = False
-    return jsonify(key = key, percent = percent_done, done = done)
+    return jsonify(key=key, percent=percent_done, done=done)
+
 
 @app.route('/progress/<key>')
 @cross_origin(origins='*')
@@ -35,6 +37,7 @@ def process_progress(key):
         done = True
     percent_done = round(percent_done, 1)
     return jsonify(key=key, percent=percent_done, done=done)
+
 
 @app.route('/kill/<key>')
 @cross_origin(origins='*')

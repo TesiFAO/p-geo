@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Threads Console</title>
+        <link rel='icon' type='image/png' href='http://fenixapps.fao.org/repository/favicon/faostat.png'>
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
         <script type='text/javascript' src='http://code.jquery.com/jquery-1.10.1.min.js'></script>
         <script type='text/javascript' src='http://netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js'></script>
@@ -30,7 +31,7 @@
                     <div>
                         <label for='source-list'>Source</label>
                         <select style='width: 100%;' id='source-list' data-placeholder='Please select a source...'>
-                            <option>Please Select...</option>
+                            <option selected>Please Select...</option>
                             <option>MODIS</option>
                             <option>TRMM</option>
                         </select>
@@ -94,44 +95,6 @@
                     <i class='fa fa-sitemap'></i> List of Threads
                 </h1>
             </div>
-            <!--<div class='row'>-->
-                <!--<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>-->
-                    <!--<div class='progress' style='height: 35px;'>-->
-                        <!--<div id='progress-bar-5' class='progress-bar' role='progressbar' aria-valuenow='00' aria-valuemin='0' aria-valuemax='100' style='width: 0%;'>-->
-                            <!--0%-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>-->
-                    <!--<button style='width: 100%;' type='button' class='btn btn-info' onclick='CONSOLE.downloadLayer("MOD13Q1.A2014001.h22v07.005.2014018091653.hdf", "progress-bar-5");'>-->
-                        <!--<i class='fa fa-download'></i> Download Yemen 1-->
-                    <!--</button>-->
-                <!--</div>-->
-                <!--<div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>-->
-                    <!--<button id='kill-progress-bar-5' style='width: 100%;' type='button' class='btn btn-danger'>-->
-                        <!--<i class='fa fa-exclamation-triangle'></i> Stop Yemen 1-->
-                    <!--</button>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class='row'>-->
-                <!--<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>-->
-                    <!--<div class='progress' style='height: 35px;'>-->
-                        <!--<div id='progress-bar-6' class='progress-bar' role='progressbar' aria-valuenow='00' aria-valuemin='0' aria-valuemax='100' style='width: 0%;'>-->
-                            <!--0%-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>-->
-                    <!--<button style='width: 100%;' type='button' class='btn btn-info' onclick='CONSOLE.downloadLayer("MOD13Q1.A2014001.h23v07.005.2014018111439.hdf", "progress-bar-6");'>-->
-                        <!--<i class='fa fa-download'></i> Download Yemen 2-->
-                    <!--</button>-->
-                <!--</div>-->
-                <!--<div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>-->
-                    <!--<button id='kill-progress-bar-6' style='width: 100%;' type='button' class='btn btn-danger'>-->
-                        <!--<i class='fa fa-exclamation-triangle'></i> Stop Yemen 2-->
-                    <!--</button>-->
-                <!--</div>-->
-            <!--</div>-->
             <div id='threads-list'>
 
             </div>

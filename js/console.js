@@ -108,9 +108,9 @@ var CONSOLE = (function() {
         });
     };
 
-    function downloadLayer(layerName, id) {
+    function downloadLayer(product, year, day, layerName, id) {
         $.ajax({
-            url         :   'http://127.0.0.1:5000/start/MODIS/' + layerName,
+            url         :   'http://127.0.0.1:5000/start/MODIS/' + product + '/' + year + '/' + day + '/' + layerName,
             type        :   'GET',
             dataType    :   'json',
             success: function (response) {
@@ -140,7 +140,7 @@ var CONSOLE = (function() {
                     if (response.percent == 100) {
                         window.clearTimeout(timers[key]);
                         $('#' + id).attr('class', 'progress-bar progress-bar-success');
-                        document.getElementById(id).innerHTML = 'Download Complete';
+                        document.getElementById(id).innerHTML = "<i class='fa fa-check' style='margin-top: 2px;'></i>";
                     } else {
                         updateProgress(id, key);
                     }
@@ -173,15 +173,36 @@ var CONSOLE = (function() {
     function download() {
 
         var url = CONFIG[$('#source-list').val()].url_list + '/' + $('#product-list').val() + '/' + $('#from-year-list').val() + '/' + $('#from-day-list').val();
-        url = 'http://127.0.0.1:5001/list/MODIS/MOD13Q1/2014/065';
 
         $.ajax({
             url: url,
             type: 'GET',
             dataType: 'json',
             success: function (r) {
+
+                var s = '';
+                s += '<table border="1">';
+                for (var i = 0 ; i < 15 ; i++) {
+                    s += '<tr>';
+                    for (var j = 0 ; j < 36 ; j++)
+                        s += '<td style="background-color: #000000; border-color: #000000; width: 20px; height: 20px;" id="' + createMODISID(j, i) + '"></td>';
+                    s += '</tr>';
+                }
+                s += '</table>';
+                $('#threads-list').append(s);
+
                 for (var i = 0 ; i < r.length ; i++)
                     singleDownload(r[i]);
+
+                for (var i = 0 ; i < 13 ; i++) {
+                    var cs = extractMODISCoordinates(r[i]);
+                    var id = createMODISID(parseInt(cs.h), parseInt(cs.v));
+                    var product = $('#product-list').val();
+                    var year = $('#from-year-list').val();
+                    var day = $('#from-day-list').val();
+                    downloadLayer(product, year, day, r[i], id + '-progress');
+                }
+
             },
             error: function (a, b, c) {
                 console.log(a);
@@ -192,13 +213,34 @@ var CONSOLE = (function() {
 
     };
 
+    function createMODISID(h, v) {
+        var s = 'h';
+        s += (h < 10) ? '0' : '';
+        s += h;
+        s += 'v';
+        s += (v < 10) ? '0' : '';
+        s += v;
+        return s;
+    }
+
+    function extractMODISCoordinates(layerName) {
+        var cs = {};
+        cs.h = layerName.substring(1 + layerName.indexOf('h'), 3 + layerName.indexOf('h'));
+        cs.v = layerName.substring(1 + layerName.indexOf('v'), 3 + layerName.indexOf('v'));
+        return cs;
+    }
+
     function singleDownload(layerName) {
+        var cs = extractMODISCoordinates(layerName);
+        var id = createMODISID(parseInt(cs.h), parseInt(cs.v));
         $.get('templates.html', function (templates) {
             var view = {
+                id: id + '-progress',
                 layerName: layerName
             };
-            var template = $(templates).filter('#thread-template').html();
-            $('#threads-list').append(Mustache.render(template, view));
+            var template = $(templates).filter('#progress-cell').html();
+            var render = Mustache.render(template, view);
+            document.getElementById(id).innerHTML = render;
         });
     };
 

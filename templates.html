@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
-            <button id='{{pippo}}' style='width: 100%;' type='button' class='btn btn-info' onclick='CONSOLE.downloadLayer("MOD13Q1.A2014001.h22v07.005.2014018091653.hdf", "progress-bar-3");'>
+            <button id='{{pippo}}' style='width: 100%;' type='button' class='btn btn-info'>
                 <i class='fa fa-download'></i> {{layerName}}
             </button>
         </div>
@@ -19,3 +19,13 @@
         </div>
     </div>
 </div>
+
+<div id='progress-cell'>
+    <div class='progress' style='width: 20px; height: 20px; margin-bottom: 0px;'>
+        <div id='{{id}}' data-layername='{{layerName}}' class='progress-bar' role='progressbar' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100' style='width: 0%;'>
+            0%
+        </div>
+    </div>
+</div>
+
+<!-- onclick='CONSOLE.downloadLayer("MOD13Q1.A2014001.h22v07.005.2014018091653.hdf", "progress-bar-3"); -->

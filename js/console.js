@@ -201,7 +201,8 @@ var CONSOLE = (function() {
                     s += '</tr>';
                 }
                 s += '</table>';
-                $('#threads-list').append(s);
+//                $('#threads-list').append(s);
+                document.getElementById('threads-list').innerHTML = s;
 
                 for (var i = 0 ; i < r.length ; i++)
                     singleDownload(r[i]);
@@ -210,26 +211,15 @@ var CONSOLE = (function() {
                     for (var j = parseInt($('#from-v-list').val()) ; j <= parseInt($('#to-v-list').val()) ; j++) {
                         var id = createMODISID(i, j);
                         for (var z = 0 ; z < r.length ; z++) {
-//                            console.log(id + ' VS ' + r[z] + '? ' + r[z].indexOf(id));
                             if (r[z].indexOf(id) > -1) {
                                 var product = $('#product-list').val();
                                 var year = $('#from-year-list').val();
                                 var day = $('#from-day-list').val();
-//                                console.log(product + ', ' + year + ', ' + day);
                                 downloadLayer(product, year, day, r[z], id + '-progress');
                             }
                         }
                     }
                 }
-
-//                for (var i = 0 ; i < 13 ; i++) {
-//                    var cs = extractMODISCoordinates(r[i]);
-//                    var id = createMODISID(parseInt(cs.h), parseInt(cs.v));
-//                    var product = $('#product-list').val();
-//                    var year = $('#from-year-list').val();
-//                    var day = $('#from-day-list').val();
-//                    downloadLayer(product, year, day, r[i], id + '-progress');
-//                }
 
             },
             error: function (a, b, c) {

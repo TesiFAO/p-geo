@@ -15,6 +15,18 @@ var CONSOLE = (function() {
         $('#from-day-list').chosen({disable_search_threshold: 10});
         $('#to-year-list').chosen({disable_search_threshold: 10});
         $('#to-day-list').chosen({disable_search_threshold: 10});
+        $('#from-h-list').chosen({disable_search_threshold: 10});
+        $('#from-v-list').chosen({disable_search_threshold: 10});
+        $('#to-h-list').chosen({disable_search_threshold: 10});
+        $('#to-v-list').chosen({disable_search_threshold: 10});
+        for (var i = 0 ; i < 36 ; i++) {
+            $('.grid-h').append('<option>' + ((i < 10) ? '0' + i : i) + '</option>');
+            $('.grid-h').trigger('chosen:updated');
+        }
+        for (var i = 0 ; i < 18 ; i++) {
+            $('.grid-v').append('<option>' + ((i < 10) ? '0' + i : i) + '</option>');
+            $('.grid-v').trigger('chosen:updated');
+        }
         $('#source-list').on('change', function() {
             try {
                 $.ajax({
@@ -194,14 +206,30 @@ var CONSOLE = (function() {
                 for (var i = 0 ; i < r.length ; i++)
                     singleDownload(r[i]);
 
-                for (var i = 0 ; i < 13 ; i++) {
-                    var cs = extractMODISCoordinates(r[i]);
-                    var id = createMODISID(parseInt(cs.h), parseInt(cs.v));
-                    var product = $('#product-list').val();
-                    var year = $('#from-year-list').val();
-                    var day = $('#from-day-list').val();
-                    downloadLayer(product, year, day, r[i], id + '-progress');
+                for (var i = parseInt($('#from-h-list').val()) ; i <= parseInt($('#to-h-list').val()) ; i++) {
+                    for (var j = parseInt($('#from-v-list').val()) ; j <= parseInt($('#to-v-list').val()) ; j++) {
+                        var id = createMODISID(i, j);
+                        for (var z = 0 ; z < r.length ; z++) {
+//                            console.log(id + ' VS ' + r[z] + '? ' + r[z].indexOf(id));
+                            if (r[z].indexOf(id) > -1) {
+                                var product = $('#product-list').val();
+                                var year = $('#from-year-list').val();
+                                var day = $('#from-day-list').val();
+//                                console.log(product + ', ' + year + ', ' + day);
+                                downloadLayer(product, year, day, r[z], id + '-progress');
+                            }
+                        }
+                    }
                 }
+
+//                for (var i = 0 ; i < 13 ; i++) {
+//                    var cs = extractMODISCoordinates(r[i]);
+//                    var id = createMODISID(parseInt(cs.h), parseInt(cs.v));
+//                    var product = $('#product-list').val();
+//                    var year = $('#from-year-list').val();
+//                    var day = $('#from-day-list').val();
+//                    downloadLayer(product, year, day, r[i], id + '-progress');
+//                }
 
             },
             error: function (a, b, c) {

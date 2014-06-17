@@ -4,7 +4,7 @@ from flask import Flask
 from flask.ext.cors import cross_origin
 from console import console_processes
 from console import threads_map_key
-import TutorialThread
+import ConsoleThread
 
 app = Flask(__name__)
 
@@ -12,7 +12,7 @@ app = Flask(__name__)
 @app.route('/start/<source_name>/<product>/<year>/<day>/<layer_name>')
 @cross_origin(origins='*')
 def process_start(source_name, product, year, day, layer_name):
-    fjp = TutorialThread.TutorialThread(source_name, product, year, day, layer_name)
+    fjp = ConsoleThread.LayerDownloadThread(source_name, product, year, day, layer_name)
     fjp.start()
     key = layer_name
     if not threads_map_key in console_processes:

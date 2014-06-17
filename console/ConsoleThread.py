@@ -4,7 +4,7 @@ from utils import config
 import os
 
 
-class TutorialThread(Thread):
+class LayerDownloadThread(Thread):
 
     layer_name = None
     source_name = None

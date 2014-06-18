@@ -18,6 +18,7 @@ from utils import config as c
 
 app = Flask(__name__)
 thread_manager_processes = {}
+progress_map = {}
 threads_map_key = 'FENIX'
 
 
@@ -47,30 +48,45 @@ class LayerDownloadThread(Thread):
             self.queue_lock.acquire()
             if not self.q.empty():
                 self.layer_name = self.q.get()
+                if self.layer_name not in progress_map:
+                    progress_map[self.layer_name] = {}
                 self.queue_lock.release()
                 ftp = FTP(self.config.get('ftp'))
                 ftp.login()
                 ftp.cwd(self.config.get('ftp_dir') + self.product + '/' + self.year + '/' + self.day + '/')
                 ftp.sendcmd('TYPE i')
-                self.total_size = ftp.size(self.layer_name)
+                # self.total_size = ftp.size(self.layer_name)
+                total_size = ftp.size(self.layer_name)
                 file = self.layer_name
                 local_file = os.path.join(self.config.get('targetDir'), file)
                 if not os.path.isfile(local_file):
                     try:
-                        fileSize = os.stat(local_file).st_size
-                        if fileSize < self.total_size:
+                        file_size = os.stat(local_file).st_size
+                        if file_size < self.total_size:
                             with open(local_file, 'w') as f:
                                 def callback(chunk):
                                     f.write(chunk)
                                     self.download_size += len(chunk)
-
+                                    progress_map[self.layer_name]['layer_name'] = self.layer_name
+                                    progress_map[self.layer_name]['total_size'] = total_size
+                                    if 'download_size' not in progress_map[self.layer_name]:
+                                        progress_map[self.layer_name]['download_size'] = 0
+                                    progress_map[self.layer_name]['download_size'] = progress_map[self.layer_name]['download_size'] + len(chunk)
+                                    progress_map[self.layer_name]['progress'] = float(progress_map[self.layer_name]['download_size']) / float(progress_map[self.layer_name]['total_size']) * 100
+                                    print progress_map[self.layer_name]
                                 ftp.retrbinary('RETR %s' % file, callback)
                     except:
                         with open(local_file, 'w') as f:
                             def callback(chunk):
                                 f.write(chunk)
                                 self.download_size += len(chunk)
-
+                                progress_map[self.layer_name]['layer_name'] = self.layer_name
+                                progress_map[self.layer_name]['total_size'] = total_size
+                                if 'download_size' not in progress_map[self.layer_name]:
+                                    progress_map[self.layer_name]['download_size'] = 0
+                                progress_map[self.layer_name]['download_size'] = progress_map[self.layer_name]['download_size'] + len(chunk)
+                                progress_map[self.layer_name]['progress'] = float(progress_map[self.layer_name]['download_size']) / float(progress_map[self.layer_name]['total_size']) * 100
+                                print progress_map[self.layer_name]
                             ftp.retrbinary('RETR %s' % file, callback)
                 ftp.quit()
             else:
@@ -92,7 +108,7 @@ class Manager(Thread):
         self.day = day
 
     def run(self):
-        t = Timer(3, self.start_manager)
+        t = Timer(1, self.start_manager)
         t.start()
 
     def start_manager(self):
@@ -164,20 +180,20 @@ def process_start(source_name, product, year, day, layer_name):
     return jsonify(key=key, percent=percent_done, done=done)
 
 
-@app.route('/progress/<key>')
+@app.route('/progress/<layer_name>')
 @cross_origin(origins='*')
-def process_progress(key):
-    if not threads_map_key in thread_manager_processes:
-        thread_manager_processes[threads_map_key] = {}
-    if not key in thread_manager_processes[threads_map_key]:
-        return jsonify(key=key, percent=100, done=True)
-    percent_done = thread_manager_processes[threads_map_key][key].percent_done()
-    done = False
-    if not thread_manager_processes[threads_map_key][key].is_alive() or percent_done == 100.0:
-        del thread_manager_processes[threads_map_key][key]
-        done = True
-    percent_done = round(percent_done, 1)
-    return jsonify(key=key, percent=percent_done, done=done)
+def process_progress(layer_name):
+    # if not threads_map_key in thread_manager_processes:
+    #     thread_manager_processes[threads_map_key] = {}
+    # if not key in thread_manager_processes[threads_map_key]:
+    #     return jsonify(key=key, percent=100, done=True)
+    # percent_done = thread_manager_processes[threads_map_key][key].percent_done()
+    # done = False
+    # if not thread_manager_processes[threads_map_key][key].is_alive() or percent_done == 100.0:
+    #     del thread_manager_processes[threads_map_key][key]
+    #     done = True
+    # percent_done = round(percent_done, 1)
+    return jsonify(progress=progress_map[layer_name])
 
 
 @app.route('/kill/<key>')

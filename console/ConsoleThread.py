@@ -58,4 +58,5 @@ class LayerDownloadThread(Thread):
         ftp.quit()
 
     def percent_done(self):
+        print 'I am here dude'
         return float(self.download_size) / float(self.total_size) * 100

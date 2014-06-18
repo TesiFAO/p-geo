@@ -55,7 +55,6 @@ class LayerDownloadThread(Thread):
                 ftp.login()
                 ftp.cwd(self.config.get('ftp_dir') + self.product + '/' + self.year + '/' + self.day + '/')
                 ftp.sendcmd('TYPE i')
-                # self.total_size = ftp.size(self.layer_name)
                 total_size = ftp.size(self.layer_name)
                 file = self.layer_name
                 local_file = os.path.join(self.config.get('targetDir'), file)
@@ -73,7 +72,6 @@ class LayerDownloadThread(Thread):
                                         progress_map[self.layer_name]['download_size'] = 0
                                     progress_map[self.layer_name]['download_size'] = progress_map[self.layer_name]['download_size'] + len(chunk)
                                     progress_map[self.layer_name]['progress'] = float(progress_map[self.layer_name]['download_size']) / float(progress_map[self.layer_name]['total_size']) * 100
-                                    print progress_map[self.layer_name]
                                 ftp.retrbinary('RETR %s' % file, callback)
                     except:
                         with open(local_file, 'w') as f:
@@ -86,7 +84,6 @@ class LayerDownloadThread(Thread):
                                     progress_map[self.layer_name]['download_size'] = 0
                                 progress_map[self.layer_name]['download_size'] = progress_map[self.layer_name]['download_size'] + len(chunk)
                                 progress_map[self.layer_name]['progress'] = float(progress_map[self.layer_name]['download_size']) / float(progress_map[self.layer_name]['total_size']) * 100
-                                print progress_map[self.layer_name]
                             ftp.retrbinary('RETR %s' % file, callback)
                 ftp.quit()
             else:
@@ -94,7 +91,6 @@ class LayerDownloadThread(Thread):
             time.sleep(1)
 
     def percent_done(self):
-        print str(self.download_size) + ' / ' + str(self.total_size)
         return float(self.download_size) / float(self.total_size) * 100
 
 
@@ -125,6 +121,7 @@ class Manager(Thread):
         ftp.cwd(self.product)
         ftp.cwd(self.year)
         ftp.cwd(self.day)
+        global name_list
         name_list = ftp.nlst()
         ftp.quit()
 
@@ -183,16 +180,13 @@ def process_start(source_name, product, year, day, layer_name):
 @app.route('/progress/<layer_name>')
 @cross_origin(origins='*')
 def process_progress(layer_name):
-    # if not threads_map_key in thread_manager_processes:
-    #     thread_manager_processes[threads_map_key] = {}
-    # if not key in thread_manager_processes[threads_map_key]:
-    #     return jsonify(key=key, percent=100, done=True)
-    # percent_done = thread_manager_processes[threads_map_key][key].percent_done()
-    # done = False
-    # if not thread_manager_processes[threads_map_key][key].is_alive() or percent_done == 100.0:
-    #     del thread_manager_processes[threads_map_key][key]
-    #     done = True
-    # percent_done = round(percent_done, 1)
+    if layer_name not in progress_map:
+        progress = {}
+        progress['download_size'] = 'unknown'
+        progress['layer_name'] = 'unknown'
+        progress['progress'] = 'unknown'
+        progress['total_size'] = 'unknown'
+        return jsonify(progress=progress)
     return jsonify(progress=progress_map[layer_name])
 
 
@@ -210,7 +204,7 @@ def kill(key):
 @cross_origin(origins='*')
 def list_keys():
     urls = []
-    for t in thread_manager_processes[threads_map_key]:
+    for t in name_list:
         urls.append('http://127.0.0.1:5000/progress/' + t)
         print 'http://127.0.0.1:5000/progress/' + t
     return jsonify(keys=urls)

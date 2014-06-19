@@ -35,6 +35,10 @@ def process_hdfs(obj):
     # translate
     tiff = warp_hdf_file(hdf_merged, obj["output_path"], obj["output_file_name"], obj["gdalwarp"])
 
+    #add overviews
+    if ( obj.has_key("gdaladdo") ):
+        tiff = overviews_tif_file(tiff, obj["gdaladdo"]["parameters"], obj["gdaladdo"]["overviews_levels"]  )
+
     return tiff
 
 
@@ -97,11 +101,29 @@ def warp_hdf_file(source_file, output_path, output_file_name, parameters=None ):
     return output_file
 
 
+def overviews_tif_file(output_file, parameters=None, overviews_levels=None):
+    print "Create Overviews TIFF File "
+
+
+    cmd = "gdaladdo "
+    for key in parameters.keys():
+        cmd += " " + key + " " + str(parameters[key])
+    cmd += " " + output_file
+    cmd += " " + overviews_levels
+
+    print cmd
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    output, error = process.communicate()
+    print output
+    print error
+    return output_file
+
+
 obj = {
     "output_file_name" : "MODIS_250m.tif",
-    "source_path" : "/home/vortex/Desktop/LAYERS/MODIS/MERGE",
+    "source_path" : "/home/kalimaha/Development/GIS/MODIS/SADEC/",
     "band" : 1,
-    "output_path" : "/home/vortex/Desktop/LAYERS/MODIS/OUTPUT",
+    "output_path" : "/home/kalimaha/Development/GIS/MODIS/SADEC/OUTPUT",
     "gdal_merge" : {
         "-n" : -3000,
         "-a_nodata" : -3000
@@ -115,7 +137,14 @@ obj = {
         "-t_srs" : "EPSG:4326",
         "-srcnodata" : -3000,
         "-dstnodata" : "nodata"
+    },
+    "gdaladdo" : {
+        "parameters" : {
+            "-r" : "average"
+        },
+        "overviews_levels" : "2 4 8 16"
     }
+
 }
 
 
@@ -129,7 +158,7 @@ print output_file
 date = datetime.datetime(2014, 1, 30);
 layer = {
     "workspace" : "modis",
-    "layername" : "bella_guide",
+    "layername" : "test_bella_guide3",
     "stylename": "raster_style_modis",
     "title" : {
         "EN" : "MODIS 250m - 2014-01-30"

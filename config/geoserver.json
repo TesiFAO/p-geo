@@ -1,6 +1,6 @@
 {
 
-    "geoserver_master" : "http://localhost:9090/geoserver/rest",
+    "geoserver_master" : "http://168.202.28.214:9090/geoserver/rest",
     "geoserver_slaves" : [],
 
     "datadir" : "/home/vortex/programs/SERVERS/tomcat_geoservers/data/",

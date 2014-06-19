@@ -131,7 +131,7 @@ class Geoserver():
             workspace = self.get_default_workspace()
 
         # TODO: it makes two, calls, so probably it's better just handle the delete code
-        if self.check_if_coverage_exist(layername):
+        if self.check_if_coverage_exist(layername, workspace):
             cs_url = url(self.service_url, ["workspaces", workspace, "coveragestores", layername])
             self.logger.info(cs_url);
             #headers, response = self.http.request(cs_url, "DELETE")
@@ -202,14 +202,17 @@ class Geoserver():
             "Content-type": "application/xml",
             "Accept": "application/xml"
         }
+        print layername
         xml = "<layer><defaultStyle><name>{0}</name></defaultStyle><enabled>{1}</enabled></layer>".format(unicode(stylename).lower(),  unicode(str(enabled).upper()))
         cs_url = url(self.service_url, ["layers", layername])
         headers, response = self.http.request(cs_url, "PUT", xml, headers)
+        print cs_url
         if headers.status == 200:
             # reload geoserver cluster
             self.reload_configuration_geoserver_slaves()
             return True
         else:
+            print headers.status, " ", response
             return False
 
     def publish_shapefile(self, input_shapefile, name, overwrite=False, workspace=None, projection=None, default_style=None, layertype=None, metadata=None):

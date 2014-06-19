@@ -147,17 +147,24 @@ class GeoStats:
         # get all codes from query TODO: (It's ugly)
         db = DBConnection.DBConnection(self.datastore);
 
+        # retrieve query values
         column_filter = self.geostats['query_condition']['column_filter']
         select = self.geostats['query_condition']['select']
         from_query = self.geostats['query_condition']['from']
-        where = self.geostats['query_condition']['where']
+        where = None
+        if ( "where" in self.geostats['query_condition'] ):
+            where = self.geostats['query_condition']['where']
 
-        query = "SELECT " + select + " FROM "+ from_query +" WHERE " + where
-        print query
-        result = db.query(query)
-        print result
+        # build query
+        query = "SELECT " + select + " FROM "+ from_query
+        if ( where is not None):
+            query += " WHERE " + where
 
-        for r in result:
+        # query DB
+        results = db.query(query)
+
+        # parsing results
+        for r in results:
             print r[0]
             # TODO: problems with query Strings and Integers (or whatever)
             query = "SELECT * FROM " + from_query + " WHERE " + column_filter + " IN (" + str(r[0]) + ")"

@@ -76,3 +76,7 @@ Return the document containing the layername
 """
 def find_by_layername(collection, layername):
     return mongo_commons.find(client, database, collection, { "$query": { "layername" : layername }, "$orderby": [{ "layertitle" : 1 }]});
+
+
+def find_by_code(collection, code, sortdate):
+    return mongo_commons.find(client, database, collection, { "$query": { "code" : code }, "$orderby": [{ "coverageTime.from" : sortdate }]});

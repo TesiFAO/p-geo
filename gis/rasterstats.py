@@ -157,22 +157,24 @@ def cell_raster_value(raster, x, y, band=None):
     #gdallocationinfo -valonly  3B42RT.2014030100.7.1day.tif -geoloc 7.57001 2.2323
     # TODO: check with -wgs84 values instad of -geoloc that is the reference system of the image
     # gdallocationinfo NGA_DEM_30.tif -l_srs EPSG:4326 4 1
-    cmd = "gdallocationinfo -valonly " + raster + " -geoloc " + str(x) + " " + str(y)
+    cmd = "gdallocationinfo -valonly " + raster + " -l_srs EPSG:4326 -geoloc " + str(x) + " " + str(y)
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     output, error = process.communicate()
     return output.strip()
     #return { raster : output.strip() }
 
-# def test():
-#     #tiffs = glob.glob("/home/vortex/programs/layers/raster/TRMM/3B42RT/2014/03/original/*.tif")
-#     # tiffs = glob.glob("/home/vortex/programs/layers/raster/RASTER/Vegetation/NDVI/*.tif")
-#     #tiffs = glob.glob("/home/vortex/programs/layers/raster/TRMM/3B42RT/2014/03/original/geotiff/*.tif")
-#     tiffs = glob.glob("/home/vortex/Desktop/TRMM/3B42RT/all/*.tif")
-#     #tiff = ["/home/vortex/programs/layers/raster/RASTER/Terrain/DEM_30/NGA_DEM_30.tif"]
-#     return cell_rasters_value(tiffs,7.42029131585, 9.86668319136)
-#     #return cell_rasters_value(tiffs, 807554.158945, 1003293.38818)
-#
-# #test()
+def test():
+    #tiffs = glob.glob("/home/vortex/programs/layers/raster/TRMM/3B42RT/2014/03/original/*.tif")
+    # tiffs = glob.glob("/home/vortex/programs/layers/raster/RASTER/Vegetation/NDVI/*.tif")
+    #tiffs = glob.glob("/home/vortex/programs/layers/raster/TRMM/3B42RT/2014/03/original/geotiff/*.tif")
+    tiffs = [
+        "/home/vortex/programs/SERVERS/tomcat_geoservers/data/data/modis/MOD13Q1_A2014001/MOD13Q1_A2014001.geotiff",
+        "/home/vortex/programs/SERVERS/tomcat_geoservers/data/data/modis/MOD13Q1_A2014017/MOD13Q1_A2014017.geotiff"
+    ]
+    return cell_rasters_value(tiffs,46.3623046875, 3.8423316311549156)
+
+test()
+
 #
 # a = crop_raster_by_vector_postgis('/home/vortex/Desktop/TRMM/3B42RT/2014/04/original/3B42RT.2014042000.7.1day.tif', 'g2008_4326', "select * from g2008_4326 where adm0_name='Italy'")
 # print a

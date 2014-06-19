@@ -3,10 +3,10 @@
     "geoserver_master" : "http://localhost:9090/geoserver/rest",
     "geoserver_slaves" : [],
 
-    "datadir" : "/home/vortex/programs/SERVERS/tomcat_geoservers/data/",
+    "datadir" : "/home/vortex/programs/tomcat_geoservers/data/",
 
-    "username" : "admin",
-    "password" : "geoserver",
+    "username" : "fenix",
+    "password" : "Fenix2014",
     "default_workspace" : "test",
     "default_datastore" : "fenixSpatialDB",
     "datastores": [

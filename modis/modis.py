@@ -124,6 +124,7 @@ print output_file
 
 # UPLOAD LAYER
 
+
 #layer example
 date = datetime.datetime(2014, 1, 30);
 layer = {

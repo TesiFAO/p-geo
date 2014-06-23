@@ -2,7 +2,9 @@ var CONSOLE = (function() {
 
     var CONFIG = {
         MODIS   :   {
-            url_list    :   'http://127.0.0.1:5001/list/MODIS'
+            url_list            :   'http://127.0.0.1:5001/list/MODIS',
+            ulr_start_manager   :   'http://127.0.0.1:5000/start/manager/MODIS',
+            url_progress        :   'http://127.0.0.1:5000/progress'
         }
     };
 
@@ -62,7 +64,7 @@ var CONSOLE = (function() {
                     $('#to-year-list').empty();
                     var s = '';
                     s += '<option>Please Select...</option>';
-                    for (var i = 0 ; i < response.length ; i++)
+                    for (var i = response.length - 1 ; i >= 0 ; i--)
                         s += '<option>' + response[i] + '</option>';
                     $('#from-year-list').append(s);
                     $('#to-year-list').append(s);
@@ -85,7 +87,7 @@ var CONSOLE = (function() {
                     $('#from-day-list').empty();
                     var s = '';
                     s += '<option>Please Select...</option>';
-                    for (var i = 0 ; i < response.length ; i++)
+                    for (var i = 0; i < response.length ; i++)
                         s += '<option>' + response[i] + '</option>';
                     $('#from-day-list').append(s);
                     $('#from-day-list').trigger('chosen:updated');
@@ -146,15 +148,25 @@ var CONSOLE = (function() {
                 type        :   'GET',
                 dataType    :   'json',
                 success: function (response) {
-                    $('#' + id).prop('aria-valuenow', response.percent);
-                    $('#' + id).css('width', response.percent + '%');
-                    document.getElementById(id).innerHTML = response.percent + '%';
-                    if (response.percent == 100) {
+                    var percent = (response.progress.progress <= 100 && response.progress.progress >= 0) ? response.progress.progress : 0;
+                    var status = response.progress.status;
+                    if (status == 'ERROR') {
                         window.clearTimeout(timers[key]);
-                        $('#' + id).attr('class', 'progress-bar progress-bar-success');
-                        document.getElementById(id).innerHTML = "<i class='fa fa-check' style='margin-top: 2px;'></i>";
+                        $('#' + id).prop('aria-valuenow', 100);
+                        $('#' + id).css('width', 100 + '%');
+                        $('#' + id).attr('class', 'progress-bar progress-bar-danger');
+                        document.getElementById(id).innerHTML = "<i class='fa fa-warning' style='margin-top: 2px;'></i>";
                     } else {
-                        updateProgress(id, key);
+                        document.getElementById(id).innerHTML = percent + '%';
+                        $('#' + id).prop('aria-valuenow', percent);
+                        $('#' + id).css('width', percent + '%');
+                        if (percent == 100) {
+                            window.clearTimeout(timers[key]);
+                            $('#' + id).attr('class', 'progress-bar progress-bar-success');
+                            document.getElementById(id).innerHTML = "<i class='fa fa-check' style='margin-top: 2px;'></i>";
+                        } else {
+                            updateProgress(id, key);
+                        }
                     }
                 },
                 error: function (a, b, c) {
@@ -163,7 +175,7 @@ var CONSOLE = (function() {
                     console.log(c);
                 }
             });
-        }, 2000);
+        }, parseInt(2500 + (7500 - 2500) * Math.random()));
     };
 
     function killThread(key) {
@@ -184,41 +196,61 @@ var CONSOLE = (function() {
 
     function download() {
 
-        var url = CONFIG[$('#source-list').val()].url_list + '/' + $('#product-list').val() + '/' + $('#from-year-list').val() + '/' + $('#from-day-list').val();
+        var url = CONFIG[$('#source-list').val()].ulr_start_manager + '/' +
+                  $('#product-list').val() + '/' +
+                  $('#from-year-list').val() + '/' +
+                  $('#from-day-list').val() + '/' +
+                  $('#from-h-list').val() + '/' +
+                  $('#to-h-list').val() + '/' +
+                  $('#from-v-list').val() + '/' +
+                  $('#to-v-list').val();+
+//        var url = 'http://127.0.0.1:5000/start/manager/MODIS/MOD13A2/2014/017'
+//        var url = 'http://127.0.0.1:5000/start/manager/MODIS/MOD13A2/2014/017/07/09/05/07'
 
         $.ajax({
+
             url: url,
             type: 'GET',
             dataType: 'json',
+
             success: function (r) {
+
+                var layers = r.layers;
 
                 var s = '';
                 s += '<table border="1">';
-                for (var i = 0 ; i < 15 ; i++) {
+                for (var i = 0 ; i < 18 ; i++) {
                     s += '<tr>';
                     for (var j = 0 ; j < 36 ; j++)
                         s += '<td style="background-color: #000000; border-color: #000000; width: 20px; height: 20px;" id="' + createMODISID(j, i) + '"></td>';
                     s += '</tr>';
                 }
                 s += '</table>';
-//                $('#threads-list').append(s);
                 document.getElementById('threads-list').innerHTML = s;
 
-                for (var i = 0 ; i < r.length ; i++)
-                    singleDownload(r[i]);
+                for (var i = 0 ; i < layers.length ; i++)
+                    singleDownload(layers[i]);
 
-                for (var i = parseInt($('#from-h-list').val()) ; i <= parseInt($('#to-h-list').val()) ; i++) {
-                    for (var j = parseInt($('#from-v-list').val()) ; j <= parseInt($('#to-v-list').val()) ; j++) {
-                        var id = createMODISID(i, j);
-                        for (var z = 0 ; z < r.length ; z++) {
-                            if (r[z].indexOf(id) > -1) {
-                                var product = $('#product-list').val();
-                                var year = $('#from-year-list').val();
-                                var day = $('#from-day-list').val();
-                                downloadLayer(product, year, day, r[z], id + '-progress');
-                            }
-                        }
-                    }
+                var min_h = 100;
+                var min_v = 100;
+                var max_h = 0;
+                var max_v = 0;
+                for (var i = 0 ; i < layers.length ; i++) {
+                    var hv = extractMODISCoordinates(layers[i]);
+                    if (hv.h > max_h)
+                        max_h = hv.h;
+                    if (hv.v > max_v)
+                        max_v = hv.v;
+                    if (hv.h < min_h)
+                        min_h = hv.h
+                    if (hv.v < min_v)
+                        min_v = hv.v
+                }
+
+                for (var i = 0 ; i < layers.length ; i++) {
+                    var hv = extractMODISCoordinates(layers[i]);
+                    var id = createMODISID(parseInt(hv.h), parseInt(hv.v));
+                    updateProgress(id + '-progress', layers[i]);
                 }
 
             },

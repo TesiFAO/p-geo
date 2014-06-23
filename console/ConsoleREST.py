@@ -120,7 +120,7 @@ class LayerDownloadThread(Thread):
 
     def percent_done(self):
         return float(self.download_size) / float(self.total_size) * 100
-    
+
 
 class Manager(Thread):
 

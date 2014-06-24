@@ -14,6 +14,7 @@ from flask.ext.cors import cross_origin
 
 import ConsoleThread
 from utils import config as c
+from modis import modis
 
 import string
 
@@ -34,7 +35,22 @@ def is_layer_in_range(layer_name, from_h, to_h, from_v, to_v):
     return False
 
 
+def create_structure(source, product, year, day):
+    config = c.Config(source)
+    if not os.path.exists(config.get('targetDir') + '/' + product):
+        os.makedirs(config.get('targetDir') + '/' + product)
+    if not os.path.exists(config.get('targetDir') + '/' + product + '/' + year):
+        os.makedirs(config.get('targetDir') + '/' + product + '/' + year)
+    if not os.path.exists(config.get('targetDir') + '/' + product + '/' + year + '/' + day):
+        os.makedirs(config.get('targetDir') + '/' + product + '/' + year + '/' + day)
+    if not os.path.exists(config.get('targetDir') + '/' + product + '/' + year + '/' + day + '/EVI'):
+        os.makedirs(config.get('targetDir') + '/' + product + '/' + year + '/' + day + '/EVI')
+    if not os.path.exists(config('targetDir') + '/' + product + '/' + year + '/' + day + '/NDVI'):
+        os.makedirs(config.get('targetDir') + '/' + product + '/' + year + '/' + day + '/NDVI')
+
+
 class LayerDownloadThread(Thread):
+
     layer_name = None
     source_name = None
     total_size = 0
@@ -73,7 +89,7 @@ class LayerDownloadThread(Thread):
                 ftp.sendcmd('TYPE i')
                 total_size = ftp.size(self.layer_name)
                 file = self.layer_name
-                local_file = os.path.join(self.config.get('targetDir'), file)
+                local_file = os.path.join(self.config.get('targetDir') + '/' + self.product + '/' + self.year + '/' + self.day, file)
                 if not os.path.isfile(local_file):
                     try:
                         file_size = os.stat(local_file).st_size
@@ -91,7 +107,7 @@ class LayerDownloadThread(Thread):
                                     progress_map[self.layer_name]['progress'] = float(progress_map[self.layer_name]['download_size']) / float(progress_map[self.layer_name]['total_size']) * 100
                                     progress_map[self.layer_name]['status'] = 'DOWNLOADING'
                                 ftp.retrbinary('RETR %s' % file, callback)
-                    except:
+                    except Exception, e:
                         print 'Downloading ' + str(self.layer_name)
                         with open(local_file, 'w') as f:
                             def callback(chunk):
@@ -158,7 +174,6 @@ class Manager(Thread):
         ftp.quit()
 
         thread_list = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliet']
-        # thread_list = ['Alpha', 'Bravo', 'Charlie']
         queue_lock = Lock()
         work_queue = Queue.Queue(len(name_list))
         threads = []
@@ -192,6 +207,7 @@ class Manager(Thread):
 @app.route('/start/manager/<source_name>/<product>/<year>/<day>/<from_h>/<to_h>/<from_v>/<to_v>')
 @cross_origin(origins='*')
 def manager_start(source_name, product, year, day, from_h, to_h, from_v, to_v):
+    create_structure(source_name, product, year, day)
     manager = Manager(source_name, product, year, day, from_h, to_h, from_v, to_v)
     manager.run()
     config = c.Config(source_name)

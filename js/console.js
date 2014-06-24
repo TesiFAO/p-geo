@@ -143,6 +143,8 @@ var CONSOLE = (function() {
                     var status = response.progress.status;
                     if (status == 'ERROR') {
                         window.clearTimeout(timers[key]);
+                        timers[key] = null;
+                        downloadStats();
                         $('#' + id).prop('aria-valuenow', 100);
                         $('#' + id).css('width', 100 + '%');
                         $('#' + id).attr('class', 'progress-bar progress-bar-danger');
@@ -153,6 +155,8 @@ var CONSOLE = (function() {
                         $('#' + id).css('width', percent + '%');
                         if (percent == 100) {
                             window.clearTimeout(timers[key]);
+                            timers[key] = null;
+                            downloadStats();
                             $('#' + id).attr('class', 'progress-bar progress-bar-success');
                             document.getElementById(id).innerHTML = "<i class='fa fa-check' style='margin-top: 2px;'></i>";
                         } else {
@@ -167,6 +171,19 @@ var CONSOLE = (function() {
                 }
             });
         }, parseInt(2500 + (7500 - 2500) * Math.random()));
+    };
+
+    function downloadStats() {
+        var count = 0;
+        for (var key in timers) {
+            if (timers[key] == null)
+                count++;
+            if (count == Object.keys(timers).length) {
+                var ok = $('.progress-bar-success').length;
+                var ko = $('.progress-bar-danger').length;
+                document.getElementById('grid-label').innerHTML = ok + ' layers downloaded, ' + ko + ' failures. <a style="cursor: pointer;" onclick="CONSOLE.download();">(try again)</a>'
+            }
+        }
     };
 
     function killThread(key) {

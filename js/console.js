@@ -30,6 +30,7 @@ var CONSOLE = (function() {
             $('.grid-v').trigger('chosen:updated');
         }
         $('#source-list').on('change', function() {
+            document.getElementById('product-label').innerHTML = 'Product <i class="fa fa-refresh fa-spin"></i>';
             try {
                 $.ajax({
                     url: CONFIG[$('#source-list').val()].url_list,
@@ -43,6 +44,7 @@ var CONSOLE = (function() {
                             s += '<option>' + response[i] + '</option>';
                         $('#product-list').append(s);
                         $('#product-list').trigger('chosen:updated');
+                        document.getElementById('product-label').innerHTML = 'Product';
                     },
                     error: function (a, b, c) {
                         console.log(a);
@@ -55,6 +57,8 @@ var CONSOLE = (function() {
             }
         });
         $('#product-list').on('change', function() {
+            document.getElementById('from-year-label').innerHTML = 'From: Year <i class="fa fa-refresh fa-spin"></i>';
+            document.getElementById('to-year-label').innerHTML = 'To: Year <i class="fa fa-refresh fa-spin"></i>';
             $.ajax({
                 url         :   CONFIG[$('#source-list').val()].url_list + '/' + $('#product-list').val(),
                 type        :   'GET',
@@ -70,6 +74,8 @@ var CONSOLE = (function() {
                     $('#to-year-list').append(s);
                     $('#from-year-list').trigger('chosen:updated');
                     $('#to-year-list').trigger('chosen:updated');
+                    document.getElementById('from-year-label').innerHTML = 'From: Year';
+                    document.getElementById('to-year-label').innerHTML = 'To: Year';
                 },
                 error: function (a, b, c) {
                     console.log(a);
@@ -79,6 +85,7 @@ var CONSOLE = (function() {
             });
         });
         $('#from-year-list').on('change', function() {
+            document.getElementById('from-day-label').innerHTML = 'From: Day <i class="fa fa-refresh fa-spin"></i>';
             $.ajax({
                 url         :   CONFIG[$('#source-list').val()].url_list + '/' + $('#product-list').val() + '/' + $('#from-year-list').val(),
                 type        :   'GET',
@@ -91,6 +98,7 @@ var CONSOLE = (function() {
                         s += '<option>' + response[i] + '</option>';
                     $('#from-day-list').append(s);
                     $('#from-day-list').trigger('chosen:updated');
+                    document.getElementById('from-day-label').innerHTML = 'From: Day';
                 },
                 error: function (a, b, c) {
                     console.log(a);
@@ -100,6 +108,7 @@ var CONSOLE = (function() {
             });
         });
         $('#to-year-list').on('change', function() {
+            document.getElementById('to-day-label').innerHTML = 'To: Day <i class="fa fa-refresh fa-spin"></i>';
             $.ajax({
                 url         :   CONFIG[$('#source-list').val()].url_list + '/' + $('#product-list').val() + '/' + $('#to-year-list').val(),
                 type        :   'GET',
@@ -112,6 +121,7 @@ var CONSOLE = (function() {
                         s += '<option>' + response[i] + '</option>';
                     $('#to-day-list').append(s);
                     $('#to-day-list').trigger('chosen:updated');
+                    document.getElementById('to-day-label').innerHTML = 'To: Day';
                 },
                 error: function (a, b, c) {
                     console.log(a);
@@ -119,25 +129,6 @@ var CONSOLE = (function() {
                     console.log(c);
                 }
             });
-        });
-    };
-
-    function downloadLayer(product, year, day, layerName, id) {
-        $.ajax({
-            url         :   'http://127.0.0.1:5000/start/MODIS/' + product + '/' + year + '/' + day + '/' + layerName,
-            type        :   'GET',
-            dataType    :   'json',
-            success: function (response) {
-                updateProgress(id, response.key);
-                $('#kill-' + id).click(function() {
-                    killThread(response.key);
-                });
-            },
-            error: function (a, b, c) {
-                console.log(a);
-                console.log(b);
-                console.log(c);
-            }
         });
     };
 
@@ -196,6 +187,8 @@ var CONSOLE = (function() {
 
     function download() {
 
+        document.getElementById('threads-list').innerHTML = '<i class="fa fa-refresh fa-spin fa-5x"></i>';
+
         var url = CONFIG[$('#source-list').val()].ulr_start_manager + '/' +
                   $('#product-list').val() + '/' +
                   $('#from-year-list').val() + '/' +
@@ -203,9 +196,7 @@ var CONSOLE = (function() {
                   $('#from-h-list').val() + '/' +
                   $('#to-h-list').val() + '/' +
                   $('#from-v-list').val() + '/' +
-                  $('#to-v-list').val();+
-//        var url = 'http://127.0.0.1:5000/start/manager/MODIS/MOD13A2/2014/017'
-//        var url = 'http://127.0.0.1:5000/start/manager/MODIS/MOD13A2/2014/017/07/09/05/07'
+                  $('#to-v-list').val();
 
         $.ajax({
 
@@ -297,7 +288,6 @@ var CONSOLE = (function() {
     return {
         CONFIG          :   CONFIG,
         init            :   init,
-        downloadLayer   :   downloadLayer,
         updateProgress  :   updateProgress,
         killThread      :   killThread,
         download        :   download

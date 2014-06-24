@@ -14,7 +14,6 @@ from flask.ext.cors import cross_origin
 
 import ConsoleThread
 from utils import config as c
-from modis import modis
 
 import string
 
@@ -45,7 +44,7 @@ def create_structure(source, product, year, day):
         os.makedirs(config.get('targetDir') + '/' + product + '/' + year + '/' + day)
     if not os.path.exists(config.get('targetDir') + '/' + product + '/' + year + '/' + day + '/EVI'):
         os.makedirs(config.get('targetDir') + '/' + product + '/' + year + '/' + day + '/EVI')
-    if not os.path.exists(config('targetDir') + '/' + product + '/' + year + '/' + day + '/NDVI'):
+    if not os.path.exists(config.get('targetDir') + '/' + product + '/' + year + '/' + day + '/NDVI'):
         os.makedirs(config.get('targetDir') + '/' + product + '/' + year + '/' + day + '/NDVI')
 
 

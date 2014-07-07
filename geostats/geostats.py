@@ -77,7 +77,7 @@ class GeoStats:
         self.layer_path = self.config.get("datadir")
         if ( ":" in self.layer["uid"] ):
             l = self.layer["uid"].split(":")
-            self.layer_path += l[0] + "/" + l[1] + ".geotiff";
+            self.layer_path += "/data/" + l[0] + "/" + l[1] + "/"+  l[1] + ".geotiff";
             # layer_uid used in saving the statistics
             self.layer_uid = l[0] + "_" + l[1]
         else:
@@ -92,9 +92,9 @@ class GeoStats:
             self.layer_uid += "_" + self.geostats["name"]
 
         # get statistics
-        self._get_statistics()
+        return self._get_statistics()
 
-
+    # TODO: to implement
     def stats_layer_filename(self, layer_filename, geostats):
         '''
         :param layer_filename: filename store int he "datadir" folder
@@ -104,6 +104,7 @@ class GeoStats:
         self.layer_path = config["datadir"] + layer_filename
         self.geostats = geostats
 
+    # TODO: to implement
     def stats_layer_path(self, layer_path, geostats):
         '''
         :param layer_path: layer_path
@@ -116,34 +117,35 @@ class GeoStats:
     def _get_statistics(self):
         # TODO: a switch
         if ( "query" in self.geostats ):
-            self._get_stats_query(self.geostats['query'], self.geostats['code'], self.geostats['save_stats'])
+            return self._get_stats_query(self.geostats['query'], self.geostats['code'], self.geostats['label'], self.geostats['save_stats'])
         if ( "query_condition" in self.geostats ):
-            self._get_stats_query_condition()
+            return self._get_stats_query_condition()
         if ( "geojson" in self.geostats ):
-            self._get_stats_geojson()
-
+            return self._get_stats_geojson()
         return None
 
-    def _get_stats_query(self, query, code, save_stats=True):
+    def _get_stats_query(self, query, code, label, save_stats=True):
 
         # crop raster by vector using postgis
         file_path = rasterstats.crop_raster_by_vector_postgis(self.layer_path, query, self.db_connection_string, "nodata")
-        print file_path
 
         # do statistics on the file
         stats = self.get_stats(file_path, True)
 
         # save statistics
+        json = {
+            "code" : code,
+            "label" : label,
+            "info" : stats
+        }
+        result = json
         if save_stats is True:
-            json = {
-                "code" : code,
-                "info" : stats
-            }
             db_geostats.insert_stats(self.layer_uid, json)
 
-        return stats
+        return result
 
     def _get_stats_query_condition(self):
+        stats = []
         # get all codes from query TODO: (It's ugly)
         db = DBConnection.DBConnection(self.datastore);
 
@@ -165,16 +167,14 @@ class GeoStats:
 
         # parsing results
         for r in results:
-            print r[0]
             # TODO: problems with query Strings and Integers (or whatever)
             query = "SELECT * FROM " + from_query + " WHERE " + column_filter + " IN (" + str(r[0]) + ")"
-            print query
-            stats = self._get_stats_query(query, str(r[0]),self.geostats['save_stats'])
+            stats.append(self._get_stats_query(query, str(r[0]), str(r[1]), self.geostats['save_stats']))
         return stats
 
     def _get_stats_geojson(self):
         stats = rasterstats.get_zonalstatics_by_json(self.layer_path, self.geostats["geojson"])
-        print stats
+
         # remove tmp file
         return stats
 

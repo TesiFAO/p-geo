@@ -1,12 +1,30 @@
 # http://pysal.readthedocs.org/en/v1.7/library/index.html
 from pysal.esda import mapclassify as mapclassify
 import numpy as np
+import brewer2mpl #https://github.com/jiffyclub/brewer2mpl
 
-def get_classiciation(map, type, k):
-    # get all values
+
+
+# COLORS
+def colors(color, values=5, type='sequential'):
+    # print brewer2mpl.print_maps()
+    # print brewer2mpl.print_maps('sequential')
+
+    # bmap = brewer2mpl.get_map('YlGn', 'sequential', 8).hex_colors
+    return  brewer2mpl.get_map(color, type, values).hex_colors
+
+
+print colors('YlGn', 3)
+
+
+def get_classiciation(obj):
+    # values, type, k, nodata=True
+    # get all values (key, values)
 
     # switch
     quantile()
+
+
 
 def quantile(values, k):
     # apply quantiles

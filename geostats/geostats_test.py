@@ -3,7 +3,7 @@ from geostats import GeoStats
 
 layer = {
     # the stored UID in the GeoMetadata database
-    "uid" : "MODIS:AB_NDVI_2_4326",
+    "uid" : "modis:test_bella_guide3",
 
     }
 #
@@ -36,16 +36,29 @@ layer = {
 #     "save_stats" : True
 # }
 #
+# geostats = {
+#     "name" : "gaul1_new",
+#     "query_condition" : {
+#         "column_filter" : "adm1_code",
+#         "select" : "adm1_code, adm1_name ",
+#         "from"   : "gaul1_3857",
+#         "where"  : "adm0_code IN ('150') GROUP BY adm1_code, adm1_name "
+#     },
+#     "save_stats" : True
+# }
+
+
+# REST
 geostats = {
-    "name" : "gaul2_new",
     "query_condition" : {
-        "column_filter" : "adm2_code",
-        "select" : "distinct(adm2_code)",
-        "from"   : "gaul2_3857",
-        "where"  : "adm0_code IN ('226','269')"
+        "column_filter" : "adm1_code",
+        "select" : "adm1_code, adm1_name ",
+        "from"   : "gaul1_3857",
+        "where"  : "adm0_code IN ('68') GROUP BY adm1_code, adm1_name "
     },
-    "save_stats" : True
+    "save_stats" : False
 }
+
 
 
 # geostats = {
@@ -55,4 +68,4 @@ geostats = {
 # }
 
 gs = GeoStats()
-gs.stats_layer_json(layer, geostats)
+print gs.stats_layer_json(layer, geostats)
